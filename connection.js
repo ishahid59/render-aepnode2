@@ -24,14 +24,14 @@ const mysqlConnection = mysql.createConnection({
     // password : 'Is#kse494',
     // database : 'ksepnode',
     // multipleStatements: true
+ 
 
 
-
-    host     : 'mysqlcluster27.registeredsite.com',
-    user     : 'ishahid_demo',
-    password : 'Is#kse494',
-    database : 'ksep_demo',
-    multipleStatements: true
+    // host     : 'mysqlcluster27.registeredsite.com',
+    // user     : 'ishahid_demo',
+    // password : 'Is#kse494',
+    // database : 'ksep_demo',
+    // multipleStatements: true
           
      
      
@@ -42,15 +42,15 @@ const mysqlConnection = mysql.createConnection({
     // multipleStatements: true 
      
       
-    // // // host   : '35.212.2.98',//
-    // // siteground working with allowing remote access for 202.125.75.202 in siteground website
-    // host     :'35.212.2.98',//'gvam1290.siteground.biz',
-    // user     : 'u6cdiqq87smud',
-    // password : 'dxxiri7kbhmb',
-    // // database : 'dbqpujqwr6gsfc',
-    // database : 'dbbbgmunthoxe8',
-    // port:'3306',
-    // multipleStatements: true 
+    // // host   : '35.212.2.98',//
+    // siteground working with allowing remote access for 202.125.75.202 in siteground website
+    host     :'35.212.2.98',//'gvam1290.siteground.biz',
+    user     : 'u6cdiqq87smud',
+    password : 'dxxiri7kbhmb',
+    // database : 'dbqpujqwr6gsfc',
+    database : 'dbbbgmunthoxe8',
+    port:'3306',
+    multipleStatements: true 
                
        
   //   //siteground not working

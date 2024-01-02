@@ -149,7 +149,7 @@ Router.get('/empdegreedetails/:id', async (req, res) => {
         // list_empprojectrole AS List_EmpProjectRole_1 ON pro_team.SecProjectRole = List_EmpProjectRole_1.ListID
         // WHERE pro_team.ID = ?` ,   
         
-        `SELECT list_empdegree.str1 AS disDegree, emp_degree.DegreeField, emp_degree.Institution, emp_degree.YearDegreeEarned, list_state.str1 AS disState,  \
+        `SELECT list_empdegree.Str1 AS disDegree, emp_degree.DegreeField, emp_degree.Institution, emp_degree.YearDegreeEarned, list_state.Str1 AS disState,  \
         list_country.Str1 AS disCountry, emp_degree.ID, emp_degree.Notes, emp_degree.Degree, emp_degree.DegState, emp_degree.Country,  \
         emp_degree.EmpID  \
         FROM emp_degree INNER JOIN  \
@@ -363,7 +363,7 @@ Router.delete('/:empdegreeid', function (req, res) {
         list_country ON emp_degree.Country = list_country.ListID  \
         WHERE (emp_degree.EmpID = `+ req.body.empid + `)`
   
-
+// console.log(sql);
         if (search == "") {
             // console.log("No Search");
             sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
