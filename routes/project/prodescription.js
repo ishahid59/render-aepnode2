@@ -172,9 +172,9 @@ Router.get('/all',  function (req, res) {
 
  
 
-    Router.get('/maxprodescriptionid', function (req, res) {
+    Router.get('/maxprophotoid', function (req, res) {
         // console.log("from maxempid"); 
-        mysqlConnection.query("SELECT MAX(ID) as maxprodescriptionid FROM  pro_descriptions", (err, result) => {
+        mysqlConnection.query("SELECT MAX(ID) as maxprophotoid FROM  pro_photo", (err, result) => {
             if (err) {
                 console.log(err)
             }

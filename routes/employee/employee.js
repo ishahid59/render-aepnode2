@@ -833,7 +833,15 @@ Router.post('/angular-datatable', function (req, res) {
 
 
     if (search == "") {
-        sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+        // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+
+        // 2024 edited for showing all records
+        if (limit==-1) {
+            sql = sql + ` order by ${col} ${orderdir} `;
+        } else {
+            sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+        }
+        
         // sql = sql + ` order by ${col} ${orderdir} `;
 
         mysqlConnection.query(sql, (err, rows, fields) => {
@@ -873,7 +881,14 @@ Router.post('/angular-datatable', function (req, res) {
         });
 
 
-        sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+        // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+
+        // 2024 edited for showing all records
+        if (limit==-1) {
+            sql = sql + ` order by ${col} ${orderdir} `;
+        } else {
+            sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+        }
 
         mysqlConnection.query(sql, (err, rows, fields) => {
             if (!err) {
@@ -1154,7 +1169,15 @@ Router.post('/search/angular-datatable', function (req, res) {
     
         if (search == "") {
             // console.log("No Search");
+
+        // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+
+        // 2024 edited for showing all records
+        if (limit==-1) {
+            sql = sql + ` order by ${col} ${orderdir} `;
+        } else {
             sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+        }
             // sql = sql + ` order by ${col} ${orderdir} `;
 
             // console.log(sql);

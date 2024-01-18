@@ -23,7 +23,6 @@ const proprofilecode= require('./routes/project/proprofilecode');
 const authenticateToken= require('./middleware/authenticateToken');// to use authenticateToken globally fron user module
 
 
-
 //
 //Body Parser Middleware
 // *************************************************

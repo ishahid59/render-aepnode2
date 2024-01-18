@@ -138,6 +138,8 @@ Router.post('/', [
             password: hashedPassword,
             created_at: mysqlTimestamp
         }
+
+        
         mysqlConnection.query('INSERT INTO users SET ?', user, function (error, results, fields) {
             if (!error) {
                 // console.log(query.sql); 
@@ -213,7 +215,7 @@ Router.post('/update',
         let password = req.body.password;
         let remember_token = req.body.remember_token;
         let created_at = req.body.created_at;
-        let updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+        let updated_at = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'); // can use mysqlTimestamp;//
         // const hashedPassword = await bcrypt.hash(req.body.password, 10)
         // const hashedPassword = await bcrypt.hash(req.body.password, 10) //2023 todo need to turn or for change pass
         const hashedPassword = req.body.password;

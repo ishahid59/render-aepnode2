@@ -366,7 +366,14 @@ Router.post('/angular-datatable', function (req, res) {
 
     if (search == "") {
         // console.log("No Search");
-        sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+        // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+
+        // 2024 edited for showing all records
+        if (limit==-1) {
+            sql = sql + ` order by ${col} ${orderdir} `;
+        } else {
+            sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+        }
         // sql = sql + ` order by ${col} ${orderdir} `;
 
         // console.log(sql);
@@ -405,7 +412,13 @@ Router.post('/angular-datatable', function (req, res) {
         // console.log("testtotal :: " + sql3);
     });
 
-    sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+    // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+    // 2024 edited for showing all records
+    if (limit==-1) {
+        sql = sql + ` order by ${col} ${orderdir} `;
+    } else {
+        sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+    }
         mysqlConnection.query(sql, (err, rows2, fields) => {
             if (!err) {
                 totalFiltered = totalbeforelimitandoffset
@@ -526,23 +539,37 @@ Router.post('/search/angular-datatable', function (req, res) {
         // 1: 'JobTitle',
         // 2: 'Registration',
         // 3: 'HireDate',
-        0: 'ProjectID',
-        1: 'ProjectNo',
-        2: 'ProjectName',
-        3: 'ProjectRole',
-        4: 'AwardYear',
-        5: 'ProjectManager',
-        6: 'OwnerCategory',
-        7: 'ComID',
-        8: 'PrimaryProjectType',
-        9: 'SecondaryProjectType',
-        10: 'Owner',
-        11: 'Client',
-        12: 'ProjectAgreementNo',
-        13: 'ProjectStatus',
-        13: 'ProposalID',
+
+        0: 'chkbox',
+        1: 'ProjectID',//ProjectID is visible but display:none. needed for creating array for resume report
+        2: 'ProjectNo',
+        3: 'ProjectName',
+        4: 'ProjectRole',
+        5: 'AwardYear',
+        6: 'ProjectManager',
+        7: 'OwnerCategory',
+        8: 'ComID',
+        9: 'PrimaryProjectType',
+        10: 'SecondaryProjectType',
+        11: 'Owner',
+        12: 'Client',
+        13: 'ProjectAgreementNo',
+        14: 'ProjectStatus',
+        15: 'ProposalID',
+        16: 'Action',
 
 
+        // 0: 'chk',
+        // 1: 'ProjectID',
+        // 2: 'ProjectNo',
+        // 3: 'ProjectName',
+        // 4: 'ProjectRole',
+        // 5: 'AwardYear',
+        // 6: 'PrimaryrojectType',
+        // 7: 'Owner',
+        // 8: 'Action' 
+     
+   
     }
 
 
@@ -806,7 +833,16 @@ Router.post('/search/angular-datatable', function (req, res) {
     // return
     if (search == "") {
         // console.log("No Search");
-        sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+
+        // 2024 edited for showing all records
+        if (limit==-1) {
+            sql = sql + ` order by ${col} ${orderdir} `;
+        } else {
+            sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+        }
+        
+
+
         // sql = sql + ` order by ${col} ${orderdir} limit ${242} offset ${0} `;
         // sql = sql + ` order by ${col} ${orderdir} `;
 
