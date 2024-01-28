@@ -42,8 +42,8 @@ app.use(cors());
 // to stop render.com from failed service
 // https://stackoverflow.com/questions/72150113/nodejs-app-build-is-successful-render-but-application-error-in-render-at-the-l
 app.get('/', (req, res) => {
-    res.sendStatus(200);
-  })
+    res.sendStatus(200)
+})
 
  
 //Local Routes
