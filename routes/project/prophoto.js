@@ -90,7 +90,7 @@ Router.post('/prophoto-angular-datatable', function (req, res) { // sending empi
         // WHERE (pro_photo.ProjectID = `+ req.body.projectid + `)`
 
         `SELECT pro_photo.ID, pro_photo.PhotoName, pro_photo.CreateDate, emp_main.EmployeeID AS disCreatedBy, pro_photo.LastModifyDate, emp_main_1.EmployeeID AS disLastModifiedBy, pro_photo.CreatedBy, pro_photo.LastModifiedBy, 
-        pro_photo.ImageData, pro_photo.Description, pro_photo.ProjectID,  pro_main.ProjectNo
+        pro_photo.ImageData, pro_photo.Description, pro_photo.ProjectID,  pro_main.ProjectNo 
     FROM     pro_photo LEFT OUTER JOIN
          pro_main ON pro_photo.ProjectID =  pro_main.ProjectID LEFT OUTER JOIN
         emp_main AS emp_main_1 ON pro_photo.LastModifiedBy = emp_main_1.EmpID LEFT OUTER JOIN
@@ -255,84 +255,94 @@ Router.post('/prophoto-angular-datatable', function (req, res) { // sending empi
 // https://www.youtube.com/watch?v=srPXMt1Q0nY 
 // Set The Storage Engine for file upload
 const storage = multer.diskStorage({
+    
     destination: function (req, file, cb) {
         // cb(null, './public/img/prophoto/')
         // create-folder-if-not-exist : https://stackoverflow.com/questions/59646445/multer-create-folder-if-not-exist
-        balayAudPath = `./public/img/prophoto/${req.body.ProjectNo}`
-        fs.mkdirSync(balayAudPath, { recursive: true })
+        // balayAudPath = `./public/img/prophoto/${req.body.ProjectNo}`
+        // console.log("test : " + req.body.ProjectNo);
+        var projectno = req.body.ProjectNo;
+        balayAudPath = './public/img/prophoto/' + projectno + "";
+
+       fs.mkdirSync(balayAudPath, { recursive: true })
         cb(null, balayAudPath)
 
     },
     filename: function (req, file, cb) {
         // cb(null, req.body.ProjectID + '-' + Date.now() + path.extname(file.originalname));
         // cb(null, "1990-0238/"+req.body.PhotoName + '-' + Date.now() + path.extname(file.originalname));
-        cb(null, req.body.PhotoName + path.extname(file.originalname));
-
+        cb(null, req.body.PhotoName  + '-' + Date.now() + path.extname(file.originalname));
+        // cb(null, req.body.PhotoName + path.extname(file.originalname));
     }
 });
-// const upload=multer({dest:"./public/img/empphoto/"})
-const upload = multer({ storage: storage })
 
+// const upload=multer({dest:"./public/img/empphoto/"})
+// const upload = multer({ storage: storage })
+const upload = multer(
+    {
+        storage: storage,
+        limits: { fileSize: 1000000 /*1000000 bytes */ },
+        fileFilter: function (req, file, cb) { // https://www.youtube.com/watch?v=w1kYZ0SOQTY&t=1350s
+            // var ext = path.extname(file.originalname);
+            // if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+            // if(ext !== '.png' || ext !== '.jpg' || ext !== '.gif' || ext !== '.jpeg') {
+
+            // if (file.mimetype === 'image/jpg' || file.mimetype === 'image/png' || file.mimetype === 'image/gif' || file.mimetype === 'image/jpeg') {
+            if (file.mimetype === 'image/jpg' || file.mimetype === 'image/png' || file.mimetype === 'image/gif' || file.mimetype === 'image/jpeg') {
+                // return callback(new Error('Only images are allowed')) //not working
+                cb(null, true);
+            }
+            else {
+                // return callback(new Error('Only images are allowed')) //not working
+                cb(new Error('Only images are allowed')) //not working
+                // cb(null, false);
+            }
+        },
+    })
+ 
 // //END IMAGE UPLOAD CODES ************************************************************
 
 
 
 
-// UPDATE
-Router.post('/update', upload.single("Image"), [
-    // check('degree', "Degree cannot be empty.").notEmpty(),
-    // check('itemname', "Item name cannot be empty.").isInt({ min:1}),
-    // check('photoname', "PhotoName cannot be empty.").notEmpty()
-    // check('degree', "Degree cannot be empty.").isInt({ min:1, max: 2000}),
-    // check('firstname', "Firstname cannot be empty.").notEmpty()//.isEmail().withMessage('Firstname TEST must contain a number')
-],
-    function (req, res) {
 
-        console.log(req.body);
-        // console.log(req.file);
+// // to catch all general errors and multer err in prophoto module, can also be used in server for all module
+// // https://expressjs.com/en/guide/error-handling.html
+// // https://www.youtube.com/watch?v=w1kYZ0SOQTY&t=1350s
+// Router.use((err, req, res, next) => {
+//     // console.error(err.stack)
+//     // res.status(500).send('Something broke!')
+//     if (err) {
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
-        }
-
-        if (req.file != undefined) {
-            req.body.ImageData = req.body.ProjectNo + "/" + req.file.filename;
-        }
-
-        let ID = req.body.ID;
-        let ProjectID = req.body.ProjectID;
-        let PhotoName = req.body.PhotoName; //2023
-        let Description = req.body.Description; //2023
-        let ImageData = req.body.ImageData;//req.body.ProjectNo + "/" + req.body.PhotoName; //2023
-        // let CreateDate = req.body.CreateDate;
-        let CreateDate = moment(req.body.CreateDate).format('YYYY-MM-DD HH:mm:ss');
-        let LastModifyDate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'); // can use mysqlTimestamp;//
-        let CreatedBy = req.body.CreatedBy;
-        let LastModifiedBy = req.body.LastModifiedBy;
+//         if (err instanceof multer.MulterError) {
+//             // A Multer error occurred when uploading.
+//             res.status(500).send("Multer Error : " + err.error)
+//         } else {
+//             res.status(500).send(err.message)
+//             console.log(err.message)
+//             // res.send("An unknown error occurred when uploading.");
+//         }
+//     }
+//     else {
+//         res.send("success")
+//     }
+// })
 
 
-
-        // let query = `UPDATE pro_photo SET ProjectID = ?, PhotoName = ?, Description = ?, ImageData = ?, CreateDate = ?, LastModifyDate = ?, CreatedBy = ?, LastModifiedBy = ? WHERE ID=?`;
-        // // mysqlConnection.query(query, [name, email, password, remember_token, created_at, updated_at, id], (err, rows, fields) => {
-        // // mysqlConnection.query(query, [name, email, hashedPassword, remember_token, created_at, updated_at, id], (err, rows, fields) => {
-        // mysqlConnection.query(query, [ProjectID, PhotoName, Description, ImageData, CreateDate, LastModifyDate, CreatedBy, LastModifiedBy, ID], (err, rows, fields) => {
-
-        // CreateDate is removed to keep as is fot edit
-        let query = `UPDATE pro_photo SET ProjectID = ?, PhotoName = ?, Description = ?, ImageData = ?, LastModifyDate = ?, CreatedBy = ?, LastModifiedBy = ? WHERE ID=?`;
-        // mysqlConnection.query(query, [name, email, password, remember_token, created_at, updated_at, id], (err, rows, fields) => {
-        // mysqlConnection.query(query, [name, email, hashedPassword, remember_token, created_at, updated_at, id], (err, rows, fields) => {
-        mysqlConnection.query(query, [ProjectID, PhotoName, Description, ImageData, LastModifyDate, CreatedBy, LastModifiedBy, ID], (err, rows, fields) => {
-
-
-            if (!err) {
-                res.send(rows);
-            } else {
-                console.log(err);
-            }
-        });
-    });
-
+// // using in server.js
+// // to catch all general errors and multer err
+// // https://expressjs.com/en/guide/error-handling.html
+// Router.use((err, req, res, next) => {
+//     // console.error(err.stack)
+//     // res.status(500).send('Something broke!')
+//     if (err instanceof multer.MulterError) {
+//         // A Multer error occurred when uploading.
+//         res.status(500).send("Multer Error : " + err.message)
+//     } else if (err) {
+//         // res.send("An unknown error occurred when uploading.");
+//         res.send(err.message);
+//     }
+// })
 
 
 
@@ -365,7 +375,9 @@ Router.post('/', upload.single("Image"), [
              ProjectID : req.body.ProjectID,
              PhotoName : req.body.PhotoName, //2023
              Description : req.body.Description, //2023
-             ImageData : req.body.ImageData,//req.body.ProjectNo + "/" + req.body.PhotoName; //2023
+              ImageData : req.body.ImageData,//req.body.ProjectNo + "/" + req.body.PhotoName; //2023
+           // ImageData : req.body.ProjectNo + "/" + req.body.PhotoName, //2023
+
              CreateDate : mysqlTimestamp,
             //  LastModifyDate : moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'); // can use mysqlTimestamp;//
              CreatedBy : req.body.CreatedBy,
@@ -406,19 +418,72 @@ Router.post('/', upload.single("Image"), [
 
 
 
-    // // DELETE pro photo
-    // Router.delete('/:prophotoid', function (req, res) {
 
-    //         // fs.unlinkSync("./public/img/prophoto/" + req.param('imagedata'));//delete uploaded photo
-    //     mysqlConnection.query("DELETE FROM pro_photo WHERE ID=?", req.param('prophotoid'), (err, rows, fields) => {
-    //         if (!err) {
-    //             res.send(rows);
-    //         } else {
-    //             console.log(err);
-    //         }
-    //     });
-    // });
  
+
+// UPDATE
+Router.post('/update', upload.single("Image"), [
+    // check('degree', "Degree cannot be empty.").notEmpty(),
+    // check('itemname', "Item name cannot be empty.").isInt({ min:1}),
+    check('PhotoName', "PhotoName cannot be empty.").notEmpty()
+    // check('degree', "Degree cannot be empty.").isInt({ min:1, max: 2000}),
+    // check('firstname', "Firstname cannot be empty.").notEmpty()//.isEmail().withMessage('Firstname TEST must contain a number')
+],
+ 
+ 
+     function (req, res) {
+
+        // Delete the previous image to preserve space
+        // fs.unlinkSync("./public/img/prophoto/" + req.body.ImageData);//delete uploaded photo
+
+        console.log(req.body);
+        // console.log(req.file);
+
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+ 
+        if (req.file != undefined) {
+            // 2024 Delete the previous image to preserve space
+            fs.unlinkSync("./public/img/prophoto/" + req.body.ImageData);//delete uploaded photo
+            req.body.ImageData = req.body.ProjectNo + "/" + req.file.filename;
+        }
+
+        let ID = req.body.ID;
+        let ProjectID = req.body.ProjectID;
+        let PhotoName = req.body.PhotoName; //2023
+        let Description = req.body.Description; //2023
+        let ImageData = req.body.ImageData;//req.body.ProjectNo + "/" + req.body.PhotoName; //2023
+        // let CreateDate = req.body.CreateDate;
+        let CreateDate = moment(req.body.CreateDate).format('YYYY-MM-DD HH:mm:ss');
+        let LastModifyDate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'); // can use mysqlTimestamp;//
+        let CreatedBy = req.body.CreatedBy;
+        let LastModifiedBy = req.body.LastModifiedBy;
+
+
+        // let query = `UPDATE pro_photo SET ProjectID = ?, PhotoName = ?, Description = ?, ImageData = ?, CreateDate = ?, LastModifyDate = ?, CreatedBy = ?, LastModifiedBy = ? WHERE ID=?`;
+        // // mysqlConnection.query(query, [name, email, password, remember_token, created_at, updated_at, id], (err, rows, fields) => {
+        // // mysqlConnection.query(query, [name, email, hashedPassword, remember_token, created_at, updated_at, id], (err, rows, fields) => {
+        // mysqlConnection.query(query, [ProjectID, PhotoName, Description, ImageData, CreateDate, LastModifyDate, CreatedBy, LastModifiedBy, ID], (err, rows, fields) => {
+
+        // CreateDate is removed to keep as is fot edit
+        let query = `UPDATE pro_photo SET ProjectID = ?, PhotoName = ?, Description = ?, ImageData = ?, LastModifyDate = ?, CreatedBy = ?, LastModifiedBy = ? WHERE ID=?`;
+        // mysqlConnection.query(query, [name, email, password, remember_token, created_at, updated_at, id], (err, rows, fields) => {
+        // mysqlConnection.query(query, [name, email, hashedPassword, remember_token, created_at, updated_at, id], (err, rows, fields) => {
+        mysqlConnection.query(query, [ProjectID, PhotoName, Description, ImageData, LastModifyDate, CreatedBy, LastModifiedBy, ID], (err, rows, fields) => {
+
+
+            if (!err) {
+                res.send(rows);
+            } else {
+                console.log(err);
+            }
+        });
+    });
+
+
 
 
 
@@ -454,6 +519,27 @@ Router.post('/', upload.single("Image"), [
         // });
 
     });
+
+
+
+
+
+
+
+    // // DELETE pro photo
+    // Router.delete('/:prophotoid', function (req, res) {
+
+    //         // fs.unlinkSync("./public/img/prophoto/" + req.param('imagedata'));//delete uploaded photo
+    //     mysqlConnection.query("DELETE FROM pro_photo WHERE ID=?", req.param('prophotoid'), (err, rows, fields) => {
+    //         if (!err) {
+    //             res.send(rows);
+    //         } else {
+    //             console.log(err);
+    //         }
+    //     });
+    // });
+ 
+
 
 
 
@@ -515,7 +601,7 @@ Router.post('/', upload.single("Image"), [
 //         if (!errors.isEmpty()) {
 //             return res.status(422).json({ errors: errors.array() });
 //         }
-
+ 
 //         try {
 
 //             // Image 

@@ -21,7 +21,7 @@ const prophoto= require('./routes/project/prophoto');
 const proprofilecode= require('./routes/project/proprofilecode');
 
 const authenticateToken= require('./middleware/authenticateToken');// to use authenticateToken globally fron user module
-
+const multer = require('multer');
 
 //
 //Body Parser Middleware
@@ -33,10 +33,17 @@ app.use(express.json());
 app.options('*', cors()) // include before other routes 
 app.use(cors());
 
-
+ 
 //local Middlewares. Put before routes to work. To use authenticateToken globally declared in user module
 // *************************************************
 //  app.use(authenticateToken);        
+
+
+// to stop render.com from failed service
+// https://stackoverflow.com/questions/72150113/nodejs-app-build-is-successful-render-but-application-error-in-render-at-the-l
+app.get('/', (req, res) => {
+    res.sendStatus(200);
+  })
 
  
 //Local Routes
@@ -59,6 +66,20 @@ app.use('/api/prophoto', prophoto);
 app.use('/api/proprofilecode', proprofilecode);
 
 
+
+// to catch all general errors and multer err
+// https://expressjs.com/en/guide/error-handling.html
+app.use((err, req, res, next) => {
+    // console.error(err.stack)
+    // res.status(500).send('Something broke!')
+    if (err instanceof multer.MulterError) {
+        // A Multer error occurred when uploading.
+        res.status(500).send("Multer Error : " + err.message)
+    } else if (err) {
+        // res.send("An unknown error occurred when uploading.");
+        res.send(err.message);
+    }
+})
 
 //Configure port
 //**************************************************** */

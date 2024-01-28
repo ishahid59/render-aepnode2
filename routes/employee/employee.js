@@ -20,16 +20,16 @@ Router.get('/maxempid', function (req, res) {
     // console.log("from maxempid"); 
     // mysqlConnection.query("SELECT MAX(EmpID) as empid FROM  emp_main", (err, result) => {
     mysqlConnection.query("SELECT MAX(EmpID) as maxempid FROM  emp_main", (err, result) => {
-
-        
         if (err) {
             console.log(err)
         }
         res.send(result);
         // res.send(result[0].empid);
     });
-
 });
+
+
+
 
 // Used To check for duplicateemployeeid()
 Router.get('/duplicateemployeeid/:empid', function (req, res) {

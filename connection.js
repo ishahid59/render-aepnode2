@@ -2,12 +2,12 @@
 const mysql = require('mysql');
 const mysqlConnection = mysql.createConnection({
 
-    // host     : 'localhost',
-    // user     : 'root',
-    // password : '',
-    // // database : 'node12',
-    // database : 'aep',
-    // multipleStatements: true
+    host     : 'localhost',
+    user     : 'root',
+    password : '',
+    // database : 'node12',
+    database : 'aep',
+    multipleStatements: true
 
      
  
@@ -27,11 +27,11 @@ const mysqlConnection = mysql.createConnection({
   
    
 
-    host     : 'mysqlcluster27.registeredsite.com',
-    user     : 'ishahid_demo',
-    password : 'Is#kse494',
-    database : 'ksep_demo',
-    multipleStatements: true
+    // host     : 'mysqlcluster27.registeredsite.com',
+    // user     : 'ishahid_demo',
+    // password : 'Is#kse494',
+    // database : 'ksep_demo',
+    // multipleStatements: true
             
         
      
