@@ -25,7 +25,7 @@ const mysqlConnection = mysql.createConnection({
     // database : 'ksepnode',
     // multipleStatements: true
   
-   
+    
 
     host     : 'mysqlcluster27.registeredsite.com',
     user     : 'ishahid_demo',
