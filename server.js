@@ -41,7 +41,7 @@ app.use(cors());
 
 // to stop render.com from failed service(server unhealthy)
 // https://stackoverflow.com/questions/72150113/nodejs-app-build-is-successful-render-but-application-error-in-render-at-the-l
-app.get('/Login/', (req, res) => {
+app.get('/healthz/', (req, res) => {
     res.sendStatus(200)
 })
 
