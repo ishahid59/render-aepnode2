@@ -92,12 +92,12 @@ app.use((err, req, res, next) => {
 
 //Configure port
 //**************************************************** */
-const PORT = process.env.PORT || 10000; //5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, function(err){
     if (err) console.log("Error in server setup")
     console.log(`Connected to Server on PORT: ${PORT}`);
 });
-
+ 
 
 
 //Set View Engine

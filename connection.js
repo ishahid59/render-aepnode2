@@ -31,9 +31,10 @@ const mysqlConnection = mysql.createConnection({
     user     : 'ishahid_demo',
     password : 'Is#kse494',
     database : 'ksep_demo',
-    multipleStatements: true
+    multipleStatements: true,
+    pool: { min: 0, max: 7 }
             
-        
+         
      
     // host     : 'pmakf9two5d.registeredsite.com',
     // user     : 'ishahidnode2',
