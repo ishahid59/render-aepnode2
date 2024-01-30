@@ -1,6 +1,6 @@
 //MySql COnnection
 const mysql = require('mysql');
-const mysqlConnection = mysql.createPool({//.createConnection({
+const mysqlConnection = mysql.createConnection({
 
     // host     : 'localhost',
     // user     : 'root',
@@ -32,8 +32,7 @@ const mysqlConnection = mysql.createPool({//.createConnection({
     password : 'Is#kse494',
     database : 'ksep_demo',
     multipleStatements: true,
-    connectionLimit:10
-    // pool: { min: 0, max: 7 }
+    pool: { min: 0, max: 7 }
             
          
      
@@ -86,16 +85,14 @@ const mysqlConnection = mysql.createPool({//.createConnection({
   });
   
 
-  // mysqlConnection.connect((err)=>{
-  //     if(!err){
-  //       console.log("Database Connection Successful");
-  //     }
-  //     else{
-  //       console.log("Connection Failure"+err);
-  //     }
-  // });
-
-
+  mysqlConnection.connect((err)=>{
+      if(!err){
+        console.log("Database Connection Successful");
+      }
+      else{
+        console.log("Connection Failure"+err);
+      }
+  });
 
 
   module.exports = mysqlConnection;
