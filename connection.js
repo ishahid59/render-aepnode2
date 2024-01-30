@@ -1,8 +1,9 @@
 
 //MySql COnnection
 const mysql = require('mysql');
-
-const mysqlConnection = mysql.createPool({//.createConnection({ //2024: new pool connection https://www.youtube.com/watch?v=eIjbSH3Imb8
+//const mysqlConnection = mysql.createConnection({ 
+//createPool is used to avoid 505 err in render.com and also make app faster
+ const mysqlConnection = mysql.createPool({//.createConnection({ //2024: new pool connection https://www.youtube.com/watch?v=eIjbSH3Imb8
 
   // host     : 'localhost',
   // user     : 'root',

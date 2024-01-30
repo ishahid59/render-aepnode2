@@ -4,7 +4,7 @@ const { check, validationResult } = require('express-validator');
 const mysqlConnection = require('../../connection');
 // authenticateToken can be used locally(on each function) or globally in server for all mod
 // const authenticateToken= require('../middleware/authenticateToken');
-
+const mysqlConnection_search = require('../../connection_search');
 
 //************************************************************** */
 // AUTHENTICATION FOR INDIVIDUAL ROUTES can be used
@@ -763,7 +763,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
 
 // USING THIS FOR ANGULAR DATATABLE 2023
 // Router.post('/search/angular-datatable',authenticateToken, function (req, res) { // with local auth
-Router.post('/angular-datatable', function (req, res) {
+ Router.post('/angular-datatable',  function (req, res) {
 
     let draw = req.body.draw;
     let limit = req.body.length;
@@ -805,7 +805,7 @@ Router.post('/angular-datatable', function (req, res) {
 
     // For Getting the TotalData without Filter
     let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
-    mysqlConnection.query(sql1, (err, rows, fields) => {
+    mysqlConnection_search.query(sql1, (err, rows, fields) => {
         totalData = rows.length;
         // totalbeforefilter = rows.length; // disabled 2023
     });
@@ -837,14 +837,16 @@ Router.post('/angular-datatable', function (req, res) {
 
         // 2024 edited for showing all records
         if (limit==-1) {
+            console.log("limit -1")
             sql = sql + ` order by ${col} ${orderdir} `;
         } else {
+            console.log("limit no")
             sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
         }
         
         // sql = sql + ` order by ${col} ${orderdir} `;
 
-        mysqlConnection.query(sql, (err, rows, fields) => {
+        mysqlConnection_search.query(sql, (err, rows, fields) => {
 
             if (!err) {
                 totalFiltered = totalData;
@@ -876,7 +878,7 @@ Router.post('/angular-datatable', function (req, res) {
         // So total filtered record is calculated before applying limit and
         let totalbeforelimitandoffset = 0;
         let sql3 = sql + ` order by ${col} ${orderdir} `;
-        mysqlConnection.query(sql3, (err, rows3, fields) => {
+        mysqlConnection_search.query(sql3, (err, rows3, fields) => {
             totalbeforelimitandoffset = rows3.length;
         });
 
@@ -885,12 +887,14 @@ Router.post('/angular-datatable', function (req, res) {
 
         // 2024 edited for showing all records
         if (limit==-1) {
+            console.log("limit -1")
             sql = sql + ` order by ${col} ${orderdir} `;
         } else {
+            console.log("limit no limit")
             sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
         }
 
-        mysqlConnection.query(sql, (err, rows, fields) => {
+        mysqlConnection_search.query(sql, (err, rows, fields) => {
             if (!err) {
                 totalFiltered = totalbeforelimitandoffset
                 res.json({
