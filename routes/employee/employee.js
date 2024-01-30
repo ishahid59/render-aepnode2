@@ -4,7 +4,6 @@ const { check, validationResult } = require('express-validator');
 const mysqlConnection = require('../../connection');
 // authenticateToken can be used locally(on each function) or globally in server for all mod
 // const authenticateToken= require('../middleware/authenticateToken');
-const mysqlConnection_search = require('../../connection_search');
 
 //************************************************************** */
 // AUTHENTICATION FOR INDIVIDUAL ROUTES can be used
@@ -805,7 +804,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
 
     // For Getting the TotalData without Filter
     let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
-    mysqlConnection_search.query(sql1, (err, rows, fields) => {
+    mysqlConnection.query(sql1, (err, rows, fields) => {
         totalData = rows.length;
         // totalbeforefilter = rows.length; // disabled 2023
     });
@@ -846,7 +845,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
         
         // sql = sql + ` order by ${col} ${orderdir} `;
 
-        mysqlConnection_search.query(sql, (err, rows, fields) => {
+      mysqlConnection.query(sql, (err, rows, fields) => {
 
             if (!err) {
                 totalFiltered = totalData;
@@ -878,7 +877,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
         // So total filtered record is calculated before applying limit and
         let totalbeforelimitandoffset = 0;
         let sql3 = sql + ` order by ${col} ${orderdir} `;
-        mysqlConnection_search.query(sql3, (err, rows3, fields) => {
+        mysqlConnection.query(sql3, (err, rows3, fields) => {
             totalbeforelimitandoffset = rows3.length;
         });
 
@@ -894,7 +893,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
             sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
         }
 
-        mysqlConnection_search.query(sql, (err, rows, fields) => {
+     mysqlConnection.query(sql, (err, rows, fields) => {
             if (!err) {
                 totalFiltered = totalbeforelimitandoffset
                 res.json({
