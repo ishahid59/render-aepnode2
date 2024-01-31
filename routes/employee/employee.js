@@ -927,10 +927,8 @@ async function totaldata() {
 
         // 2024 edited for showing all records
         if (limit==-1) {
-            console.log("limit -1")
             sql = sql + ` order by ${col} ${orderdir} `;
         } else {
-            console.log("limit no")
             sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
         }
         
