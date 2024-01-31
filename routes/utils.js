@@ -33,16 +33,49 @@ async function maxid(table, field) {
 
 
 
-async function test(){
-    let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
-    mysqlConnection.query(sql1, (err, rows, fields) => {
-        totalData = rows.length;
-        // console.log("async function "+totalData)
-        // return totalData;
-        return totalData;
 
+// used emp and project main and search
+// https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
+// ** 2024 After using pool conn the mysql order has changed. So to keep the order async await is used
+// https://www.google.com/search?q=async+function+%5Bobject+Promise%5D&oq=async+function+%5Bobject+Promise%5D&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB7SAQgxMjIyajBqN6gCALACAA&sourceid=chrome&ie=UTF-8
+// https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
+
+async function totaldata(sql1) {
+    return new Promise((resolve, reject) => {
+        let totaldata;
+        mysqlConnection.query(sql1, (err, rows, fields) => {
+            if (!err) {
+                totaldata=rows.length.toString();
+            } else {
+                console.log(err);
+            }
+        const data = totaldata;//'Some data';
+        resolve(data);            
+        });
     });
-}
+  }
+
+
+// used emp and project main and search
+// https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
+// ** 2024 After using pool conn the mysql order has changed. So to keep the order async await is used
+// https://www.google.com/search?q=async+function+%5Bobject+Promise%5D&oq=async+function+%5Bobject+Promise%5D&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB7SAQgxMjIyajBqN6gCALACAA&sourceid=chrome&ie=UTF-8
+// https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
+
+  async function totalbeforelimtandoff(sql1) {
+    return new Promise((resolve, reject) => {
+        let totaldata;
+        mysqlConnection.query(sql1, (err, rows, fields) => {
+            if (!err) {
+                totaldata=rows.length.toString();
+            } else {
+                console.log(err);
+            }
+        const data = totaldata;//'Some data';
+        resolve(data);            
+        });
+    });
+  }
 
 
 // MSSQL CODES
@@ -117,6 +150,6 @@ async function test(){
 // module.exports = maxid; 
 // Must export in this format instead of above format for importing all from this module
 module.exports = {
-   test, maxid//, setNullDate, alreadyHaveItem,
+    maxid, totaldata, totalbeforelimtandoff//, setNullDate, alreadyHaveItem,
    
 }
