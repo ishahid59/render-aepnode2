@@ -1026,7 +1026,7 @@ async function totaldata() {
 
 // USING THIS 2023
 // Router.post('/search/angular-datatable',authenticateToken, function (req, res) { // with local auth
-Router.post('/search/angular-datatable', function (req, res) {
+Router.post('/search/angular-datatable', async function (req, res) {
     // console.log(" MYTEST  "+req.body.firstname);
     // console.log(req.body);
     // return;
@@ -1105,17 +1105,25 @@ Router.post('/search/angular-datatable', function (req, res) {
 
 
     
-        var totalData = 113;//0;
+        var totalData = 0;
         var totalbeforefilter = 0;
         var totalFiltered = 0;
         var col = columns[ordercol];// to get name of order col not index
     
-        // For Getting the TotalData without Filter
-        let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
-        mysqlConnection.query(sql1, (err, rows, fields) => {
-            totalData = rows.length;
-             // totalbeforefilter = rows.length; // disabled 2023
-        });
+        // // For Getting the TotalData without Filter
+        // let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
+        // mysqlConnection.query(sql1, (err, rows, fields) => {
+        //     totalData = rows.length;
+        //      // totalbeforefilter = rows.length; // disabled 2023
+        // });
+
+    // ** After using pool conn the mysql order has changed. So to keep the order async await is used
+    // https://www.google.com/search?q=async+function+%5Bobject+Promise%5D&oq=async+function+%5Bobject+Promise%5D&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB7SAQgxMjIyajBqN6gCALACAA&sourceid=chrome&ie=UTF-8
+    // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
+
+    // await test().then(json => {console.log(json)});
+       await totaldata().then(data => { totalData = data; });
+    // const value = await totaldata();
     
         // let sql = `SELECT emp_main.empid, emp_main.firstname, emp_main.lastname, list_empjobtitle.str1 AS jobtitle, \
         // list_empregistration.str1 AS registration, emp_main.consultant, emp_main.hiredate, emp_main.created_at, \
@@ -1261,11 +1269,15 @@ Router.post('/search/angular-datatable', function (req, res) {
         // So total filtered record is calculated before applying limit and
         let totalbeforelimitandoffset=0;
         let sql3 = sql + ` order by ${col} ${orderdir} `;
-        mysqlConnection.query(sql3, (err, rows3, fields) => {
-            totalbeforelimitandoffset = rows3.length;
-            // console.log("testtotal :: " +rows3.length);
-        });
+        // mysqlConnection.query(sql3, (err, rows3, fields) => {
+        //     totalbeforelimitandoffset = rows3.length;
+        //     // console.log("testtotal :: " +rows3.length);
+        // });
 
+    // ** 2024 After using pool conn the mysql order has changed. So to keep the order async await is used
+    // https://www.google.com/search?q=async+function+%5Bobject+Promise%5D&oq=async+function+%5Bobject+Promise%5D&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB7SAQgxMjIyajBqN6gCALACAA&sourceid=chrome&ie=UTF-8
+    // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
+        await totalbeforelimtandoff(sql3).then(data => {totalbeforelimitandoffset = data;});
     
         if (search == "") {
             // console.log("No Search");
