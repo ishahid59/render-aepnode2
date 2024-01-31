@@ -20,7 +20,7 @@ const mysqlConnection = require('../connection');
 
 
 // Router.get('/maxempdegreeid', function (req, res) {
-function maxid(table, field) {
+async function maxid(table, field) {
     mysqlConnection.query("SELECT MAX(" + field + ") as maxid FROM  " + table + "", (err, result) => {
         if (err) {
             console.log(err)
@@ -33,7 +33,16 @@ function maxid(table, field) {
 
 
 
+async function test(){
+    let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
+    mysqlConnection.query(sql1, (err, rows, fields) => {
+        totalData = rows.length;
+        // console.log("async function "+totalData)
+        // return totalData;
+        return totalData;
 
+    });
+}
 
 
 // MSSQL CODES
@@ -102,3 +111,12 @@ function maxid(table, field) {
 //         return err
 //     }
 // }
+
+
+
+// module.exports = maxid; 
+// Must export in this format instead of above format for importing all from this module
+module.exports = {
+   test, maxid//, setNullDate, alreadyHaveItem,
+   
+}

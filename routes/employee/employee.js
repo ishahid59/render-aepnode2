@@ -2,8 +2,12 @@ const express = require('express');
 const Router = express.Router();
 const { check, validationResult } = require('express-validator');
 const mysqlConnection = require('../../connection');
+const mysql = require('mysql');
+const utils = require('../utils');
 // authenticateToken can be used locally(on each function) or globally in server for all mod
 // const authenticateToken= require('../middleware/authenticateToken');
+
+
 
 //************************************************************** */
 // AUTHENTICATION FOR INDIVIDUAL ROUTES can be used
@@ -56,6 +60,7 @@ Router.get('/duplicateemployeeid/:empid', function (req, res) {
 // ALL TEST
 // Router.get('/all',authenticateToken,  function (req, res) {// with local auth
 Router.get('/all',  function (req, res) {
+    // utils.test();
     // console.log(req.body)
     // let sql="SELECT emp_main.empid, emp_main.firstname, emp_main.lastname, list_empjobtitle.str1 AS jobtitle, \
     //  list_empregistration.str1 AS registration, emp_main.consultant, emp_main.hiredate, emp_main.created_at, \
@@ -755,7 +760,21 @@ Router.post('/angular-jquery-datatable', function (req, res) {
 
 
 
-
+// async function test(){
+//     let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
+//     mysqlConnection.query(sql1, (err, rows, fields) => {
+//         totalData =  rows.length.toString();
+//         // console.log("async function "+totalData)
+//         // return totalData;
+//         // return rows;
+//         // return {"x":totalData};
+//         if (!err) {
+//             return totalData;
+//         } else {
+//             console.log(err);
+//         }
+//     });
+// }
 
 
 
@@ -763,6 +782,20 @@ Router.post('/angular-jquery-datatable', function (req, res) {
 // USING THIS FOR ANGULAR DATATABLE 2023
 // Router.post('/search/angular-datatable',authenticateToken, function (req, res) { // with local auth
  Router.post('/angular-datatable',  function (req, res) {
+
+
+    const mysqlConnection2 = mysql.createConnection({//.createConnection({ //2024: new pool connection https://www.youtube.com/watch?v=eIjbSH3Imb8
+        host: 'mysqlcluster27.registeredsite.com',
+        user: 'ishahid_demo',
+        password: 'Is#kse494',
+        database: 'ksep_demo',
+        multipleStatements: true,
+        connectionLimit: 10,
+    });
+
+
+
+
 
     let draw = req.body.draw;
     let limit = req.body.length;
@@ -797,17 +830,26 @@ Router.post('/angular-jquery-datatable', function (req, res) {
     }
 
 
-    var totalData = 0;
+    var totalData = 113;//0;
     var totalbeforefilter = 0;
     var totalFiltered = 0;
     var col = columns[ordercol];// to get name of order col not index
 
     // For Getting the TotalData without Filter
     let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
-    mysqlConnection.query(sql1, (err, rows, fields) => {
+    mysqlConnection2.query(sql1, (err, rows, fields) => {
         totalData = rows.length;
         // totalbeforefilter = rows.length; // disabled 2023
     });
+  
+ 
+    // await test().then(json => {console.log(json)});
+    // await test();
+  
+        // const value = await test();
+        // console.log("test "+value);
+
+
 
     let sql =
         `SELECT DISTINCT emp_main.EmpID, emp_main.EmployeeID, emp_main.Firstname, emp_main.Lastname, com_main.CompanyName AS ComID, 
@@ -829,7 +871,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
             pro_team ON emp_main.EmpID = pro_team.EmpID LEFT OUTER JOIN
             pro_main ON pro_team.ProjectID = pro_main.ProjectID
             WHERE (emp_main.EmpID > 0)`
-
+ 
 
     if (search == "") {
         // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
@@ -844,12 +886,15 @@ Router.post('/angular-jquery-datatable', function (req, res) {
         }
         
         // sql = sql + ` order by ${col} ${orderdir} `;
+       
 
-      mysqlConnection.query(sql, (err, rows, fields) => {
+
+      mysqlConnection2.query(sql, (err, rows, fields) => {
 
             if (!err) {
+                
                 totalFiltered = totalData;
-
+                
                 res.json({
                     "draw": draw,
                     "recordsTotal": totalData,
@@ -877,7 +922,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
         // So total filtered record is calculated before applying limit and
         let totalbeforelimitandoffset = 0;
         let sql3 = sql + ` order by ${col} ${orderdir} `;
-        mysqlConnection.query(sql3, (err, rows3, fields) => {
+        mysqlConnection2.query(sql3, (err, rows3, fields) => {
             totalbeforelimitandoffset = rows3.length;
         });
 
@@ -893,7 +938,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
             sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
         }
 
-     mysqlConnection.query(sql, (err, rows, fields) => {
+     mysqlConnection2.query(sql, (err, rows, fields) => {
             if (!err) {
                 totalFiltered = totalbeforelimitandoffset
                 res.json({
@@ -906,8 +951,9 @@ Router.post('/angular-jquery-datatable', function (req, res) {
             else {
                 console.log(err);
             }
-
+ 
         });
+ 
 
     } // end else
 });
@@ -1008,7 +1054,7 @@ Router.post('/search/angular-datatable', function (req, res) {
 
 
     
-        var totalData = 0;
+        var totalData = 113;//0;
         var totalbeforefilter = 0;
         var totalFiltered = 0;
         var col = columns[ordercol];// to get name of order col not index
