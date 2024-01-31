@@ -760,7 +760,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
 
 
 
-// async function test(){
+// async function  test(){
 //     let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
 //     mysqlConnection.query(sql1, (err, rows, fields) => {
 //         totalData =  rows.length.toString();
@@ -777,21 +777,56 @@ Router.post('/angular-jquery-datatable', function (req, res) {
 // }
 
 
+// https://stackoverflow.com/questions/28485032/how-to-promisify-a-mysql-function-using-bluebird
+async function  test2(callback){
+    let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
+    mysqlConnection.query(sql1, (err, rows, fields) => {
+        // totalData =  rows.length.toString();
+        // console.log("async function "+totalData)
+        // return totalData;
+        // return rows;
+        // return {"x":totalData};
+        if (!err) {
+            return callback(rows);
+        } else {
+            console.log(err);
+        }
+    });
+}
+
+// https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
+async function test() {
+    return new Promise((resolve, reject) => {
+        let totaldata;
+        let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
+        mysqlConnection.query(sql1, (err, rows, fields) => {
+            if (!err) {
+                totaldata=rows.length.toString();
+            } else {
+                console.log(err);
+            }
+        const data = totaldata;//'Some data';
+        resolve(data);            
+        });
+    });
+  }
+
+
 
 
 // USING THIS FOR ANGULAR DATATABLE 2023
 // Router.post('/search/angular-datatable',authenticateToken, function (req, res) { // with local auth
- Router.post('/angular-datatable',  function (req, res) {
+ Router.post('/angular-datatable', async function (req, res) {
 
 
-    const mysqlConnection2 = mysql.createConnection({//.createConnection({ //2024: new pool connection https://www.youtube.com/watch?v=eIjbSH3Imb8
-        host: 'mysqlcluster27.registeredsite.com',
-        user: 'ishahid_demo',
-        password: 'Is#kse494',
-        database: 'ksep_demo',
-        multipleStatements: true,
-        connectionLimit: 10,
-    });
+    // const mysqlConnection2 = mysql.createConnection({//.createConnection({ //2024: new pool connection https://www.youtube.com/watch?v=eIjbSH3Imb8
+    //     host: 'mysqlcluster27.registeredsite.com',
+    //     user: 'ishahid_demo',
+    //     password: 'Is#kse494',
+    //     database: 'ksep_demo',
+    //     multipleStatements: true,
+    //     connectionLimit: 10,
+    // });
 
 
 
@@ -830,25 +865,27 @@ Router.post('/angular-jquery-datatable', function (req, res) {
     }
 
 
-    var totalData = 113;//0;
+    var totalData = 0;//req.body.totaldata;//113;//0;
     var totalbeforefilter = 0;
     var totalFiltered = 0;
     var col = columns[ordercol];// to get name of order col not index
-
-    // For Getting the TotalData without Filter
-    let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
-    mysqlConnection2.query(sql1, (err, rows, fields) => {
-        totalData = rows.length;
-        // totalbeforefilter = rows.length; // disabled 2023
-    });
+    // // For Getting the TotalData without Filter
+    // let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
+    // mysqlConnection2.query(sql1, (err, rows, fields) => {
+    //     totalData = rows.length;
+    //     // totalbeforefilter = rows.length; // disabled 2023
+    // });
   
  
     // await test().then(json => {console.log(json)});
+    await test().then(json => {totalData = json;});
+
     // await test();
   
         // const value = await test();
         // console.log("test "+value);
-
+        // var promisified = Promise.promisify(sqlGun);
+        //  sqlGun().then(json => {console.log(json)});
 
 
     let sql =
@@ -872,7 +909,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
             pro_main ON pro_team.ProjectID = pro_main.ProjectID
             WHERE (emp_main.EmpID > 0)`
  
-
+ 
     if (search == "") {
         // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
 
@@ -889,7 +926,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
        
 
 
-      mysqlConnection2.query(sql, (err, rows, fields) => {
+      mysqlConnection.query(sql, (err, rows, fields) => {
 
             if (!err) {
                 
@@ -922,7 +959,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
         // So total filtered record is calculated before applying limit and
         let totalbeforelimitandoffset = 0;
         let sql3 = sql + ` order by ${col} ${orderdir} `;
-        mysqlConnection2.query(sql3, (err, rows3, fields) => {
+        mysqlConnection.query(sql3, (err, rows3, fields) => {
             totalbeforelimitandoffset = rows3.length;
         });
 
@@ -938,7 +975,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
             sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
         }
 
-     mysqlConnection2.query(sql, (err, rows, fields) => {
+     mysqlConnection.query(sql, (err, rows, fields) => {
             if (!err) {
                 totalFiltered = totalbeforelimitandoffset
                 res.json({
@@ -956,7 +993,7 @@ Router.post('/angular-jquery-datatable', function (req, res) {
   
 
     } // end else
-    mysqlConnection2.end();
+    // mysqlConnection2.end();
 });
 
 
