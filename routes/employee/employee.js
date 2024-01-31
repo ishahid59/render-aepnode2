@@ -795,7 +795,7 @@ async function  test2(callback){
 }
 
 // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
-async function test() {
+async function totaldata() {
     return new Promise((resolve, reject) => {
         let totaldata;
         let sql1 = `SELECT * FROM emp_main WHERE emp_main.EmpID>0`;
@@ -812,6 +812,20 @@ async function test() {
   }
 
 
+  async function totalbeforelimtandoff(sql1) {
+    return new Promise((resolve, reject) => {
+        let totaldata;
+        mysqlConnection.query(sql1, (err, rows, fields) => {
+            if (!err) {
+                totaldata=rows.length.toString();
+            } else {
+                console.log(err);
+            }
+        const data = totaldata;//'Some data';
+        resolve(data);            
+        });
+    });
+  }
 
 
 // USING THIS FOR ANGULAR DATATABLE 2023
@@ -877,15 +891,13 @@ async function test() {
     // });
   
  
-    // await test().then(json => {console.log(json)});
-    await test().then(json => {totalData = json;});
+    // ** After using pool conn the mysql order has changed. So to keep the order async await is used
+    // https://www.google.com/search?q=async+function+%5Bobject+Promise%5D&oq=async+function+%5Bobject+Promise%5D&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB7SAQgxMjIyajBqN6gCALACAA&sourceid=chrome&ie=UTF-8
+    // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
 
-    // await test();
-  
-        // const value = await test();
-        // console.log("test "+value);
-        // var promisified = Promise.promisify(sqlGun);
-        //  sqlGun().then(json => {console.log(json)});
+    // await test().then(json => {console.log(json)});
+    await totaldata().then(data => {totalData = data;});
+    // const value = await totaldata();
 
 
     let sql =
@@ -957,21 +969,24 @@ async function test() {
 
         // //2023 important. When limit and offset is used to sql string then total length always shows the "limit"
         // So total filtered record is calculated before applying limit and
+ 
         let totalbeforelimitandoffset = 0;
         let sql3 = sql + ` order by ${col} ${orderdir} `;
-        mysqlConnection.query(sql3, (err, rows3, fields) => {
-            totalbeforelimitandoffset = rows3.length;
-        });
+        // mysqlConnection.query(sql3, (err, rows3, fields) => {
+        //     totalbeforelimitandoffset = rows3.length;
+        // });
+    // ** 2024 After using pool conn the mysql order has changed. So to keep the order async await is used
+    // https://www.google.com/search?q=async+function+%5Bobject+Promise%5D&oq=async+function+%5Bobject+Promise%5D&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB7SAQgxMjIyajBqN6gCALACAA&sourceid=chrome&ie=UTF-8
+    // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
+       await totalbeforelimtandoff(sql3).then(data => {totalbeforelimitandoffset = data;});
 
 
         // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
 
         // 2024 edited for showing all records
         if (limit==-1) {
-            console.log("limit -1")
             sql = sql + ` order by ${col} ${orderdir} `;
         } else {
-            console.log("limit no limit")
             sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
         }
 
