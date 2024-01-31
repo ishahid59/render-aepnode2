@@ -953,9 +953,10 @@ Router.post('/angular-jquery-datatable', function (req, res) {
             }
  
         });
- 
+  
 
     } // end else
+    mysqlConnection2.end();
 });
 
 
