@@ -61,8 +61,7 @@ async function totaldata(sql1) {
         mysqlConnection.query(sql1, (err, rows, fields) => {
             if (!err) {
                 // totaldata=rows.length.toString();
-                totaldata=rows[0].total.toString();
-
+                totaldata=rows[0].total; //for sql count
             } else {
                 console.log(err);
             }

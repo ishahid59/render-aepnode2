@@ -349,7 +349,8 @@ Router.post('/angular-datatable', async function (req, res) {
     // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
 
     // await test().then(json => {console.log(json)});
-    await utils.totaldata("SELECT * FROM pro_main WHERE pro_main.ProjectID>0").then(data => { totalData = data; });
+    // await utils.totaldata("SELECT * FROM pro_main WHERE pro_main.ProjectID>0").then(data => { totalData = data; });
+    await utils.totaldata("SELECT COUNT(ProjectID) AS total FROM pro_main WHERE pro_main.ProjectID>0").then(data => {totalData = data;});
     // const value = await totaldata();
 
     let sql =
@@ -608,7 +609,9 @@ Router.post('/search/angular-datatable', async function (req, res) {
     // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
 
     // await test().then(json => {console.log(json)});
-    await utils.totaldata("SELECT * FROM pro_main WHERE pro_main.ProjectID>0").then(data => { totalData = data; });
+    // await utils.totaldata("SELECT * FROM pro_main WHERE pro_main.ProjectID>0").then(data => { totalData = data; });
+    await utils.totaldata("SELECT COUNT(ProjectID) AS total FROM pro_main WHERE pro_main.ProjectID>0").then(data => {totalData = data;});
+
     // const value = await totaldata();
 
 
