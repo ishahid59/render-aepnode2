@@ -40,12 +40,29 @@ async function maxid(table, field) {
 // https://www.google.com/search?q=async+function+%5Bobject+Promise%5D&oq=async+function+%5Bobject+Promise%5D&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB7SAQgxMjIyajBqN6gCALACAA&sourceid=chrome&ie=UTF-8
 // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
 
+// async function totaldata(sql1) {
+//     return new Promise((resolve, reject) => {
+//         let totaldata;
+//         mysqlConnection.query(sql1, (err, rows, fields) => {
+//             if (!err) {
+//                 totaldata=rows.length.toString();
+//             } else {
+//                 console.log(err);
+//             }
+//         const data = totaldata;//'Some data';
+//         resolve(data);            
+//         });
+//     });
+//   }
+
 async function totaldata(sql1) {
     return new Promise((resolve, reject) => {
         let totaldata;
         mysqlConnection.query(sql1, (err, rows, fields) => {
             if (!err) {
-                totaldata=rows.length.toString();
+                // totaldata=rows.length.toString();
+                totaldata=rows[0].total.toString();
+
             } else {
                 console.log(err);
             }
@@ -54,7 +71,6 @@ async function totaldata(sql1) {
         });
     });
   }
-
 
 // used emp and project main and search
 // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.

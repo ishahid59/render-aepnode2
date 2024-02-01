@@ -896,7 +896,8 @@ async function totaldata() {
     // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
 
     // await test().then(json => {console.log(json)});
-    await utils.totaldata("SELECT * FROM emp_main WHERE emp_main.EmpID>0").then(data => {totalData = data;});
+    // await utils.totaldata("SELECT * FROM emp_main WHERE emp_main.EmpID>0").then(data => {totalData = data;});
+       await utils.totaldata("SELECT COUNT(EmpID) AS total FROM emp_main WHERE emp_main.EmpID>0").then(data => {totalData = data;});
     // const value = await totaldata();
 
 
@@ -1122,7 +1123,8 @@ Router.post('/search/angular-datatable', async function (req, res) {
     // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
 
     // await test().then(json => {console.log(json)});
-       await utils.totaldata("SELECT * FROM emp_main WHERE emp_main.EmpID>0").then(data => { totalData = data; });
+    // await utils.totaldata("SELECT * FROM emp_main WHERE emp_main.EmpID>0").then(data => {totalData = data;});
+       await utils.totaldata("SELECT COUNT(EmpID) AS total FROM emp_main WHERE emp_main.EmpID>0").then(data => {totalData = data;});
     // const value = await totaldata();
     
         // let sql = `SELECT emp_main.empid, emp_main.firstname, emp_main.lastname, list_empjobtitle.str1 AS jobtitle, \
