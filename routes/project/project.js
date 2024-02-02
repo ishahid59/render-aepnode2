@@ -443,8 +443,8 @@ Router.post('/angular-datatable', async function (req, res) {
         mysqlConnection.query(sql, (err, rows2, fields) => {
             if (!err) {
                 //2024
-                if (rows.length>0) {
-                    totalData = rows[0].totaldata;
+                if (rows2.length>0) {
+                    totalData = rows2[0].totaldata;
                 }
                 totalFiltered = totalbeforelimitandoffset
                 res.json({
@@ -657,6 +657,7 @@ Router.post('/search/angular-datatable', async function (req, res) {
 
         //**Note: LINE   "cao_main AS cao_main_1 ON pro_main.Client = cao_main.CAOID LEFT OUTER JOIN "
         // is changed to "cao_main AS cao_main_1 ON pro_main.Client = cao_main_1.CAOID LEFT OUTER JOIN "
+        //https://stackoverflow.com/questions/33889922/how-to-get-the-number-of-total-results-when-there-is-limit-in-query
         `SELECT DISTINCT pro_main.ProjectName, list_proprole.Str1 AS ProjectRole, pro_main.AwardYear, pro_main.ProjectNo, list_proocategory.Str1 AS OwnerCategory, 
         com_main.CompanyName AS ComID, list_projecttype.Str1 AS PrimaryProjectType, pro_main.SecondaryProjectType, cao_main.Name AS Owner, 
         cao_main_1.Name AS Client, pro_main.ProjectAgreementNo, emp_main.EmployeeID AS ProjectManager, list_prostatus.Str1 AS ProjectStatus, 
@@ -978,7 +979,7 @@ Router.post('/search/angular-datatable', async function (req, res) {
 
 
 
-
+ 
 
 
 
