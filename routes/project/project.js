@@ -350,7 +350,7 @@ Router.post('/angular-datatable', async function (req, res) {
 
     // await test().then(json => {console.log(json)});
     // await utils.totaldata("SELECT * FROM pro_main WHERE pro_main.ProjectID>0").then(data => { totalData = data; });
-    await utils.totaldata("SELECT COUNT(ProjectID) AS total FROM pro_main WHERE pro_main.ProjectID>0").then(data => {totalData = data;});
+    // await utils.totaldata("SELECT COUNT(ProjectID) AS total FROM pro_main WHERE pro_main.ProjectID>0").then(data => {totalData = data;});
     // const value = await totaldata();
 
     let sql =
@@ -359,7 +359,8 @@ Router.post('/angular-datatable', async function (req, res) {
         `SELECT DISTINCT pro_main.ProjectName, list_proprole.Str1 AS ProjectRole, pro_main.AwardYear, pro_main.ProjectNo, list_proocategory.Str1 AS OwnerCategory, 
         com_main.CompanyName AS ComID, list_projecttype.Str1 AS PrimaryProjectType, pro_main.SecondaryProjectType, cao_main.Name AS Owner, 
         cao_main_1.Name AS Client, pro_main.ProjectAgreementNo, emp_main.EmployeeID AS ProjectManager, list_prostatus.Str1 AS ProjectStatus, 
-        proposal_main.ProposalNo AS ProposalID, pro_main.ProjectID
+        proposal_main.ProposalNo AS ProposalID, pro_main.ProjectID,
+        (select count(*) from pro_main WHERE pro_main.ProjectID>0) as totaldata
         FROM  pro_main LEFT OUTER JOIN
         list_prostatus ON pro_main.ProjectStatus = list_prostatus.ListID LEFT OUTER JOIN
         list_projecttype ON pro_main.PrimaryProjectType = list_projecttype.ListID LEFT OUTER JOIN
@@ -391,6 +392,10 @@ Router.post('/angular-datatable', async function (req, res) {
         mysqlConnection.query(sql, (err, rows, fields) => {
 
             if (!err) {
+                //2024
+                if (rows.length>0) {
+                    totalData = rows[0].totaldata;
+                }
                 totalFiltered = totalData;
 
                 res.json({
@@ -437,6 +442,10 @@ Router.post('/angular-datatable', async function (req, res) {
     }
         mysqlConnection.query(sql, (err, rows2, fields) => {
             if (!err) {
+                //2024
+                if (rows.length>0) {
+                    totalData = rows[0].totaldata;
+                }
                 totalFiltered = totalbeforelimitandoffset
                 res.json({
                     "draw": draw,
@@ -610,7 +619,7 @@ Router.post('/search/angular-datatable', async function (req, res) {
 
     // await test().then(json => {console.log(json)});
     // await utils.totaldata("SELECT * FROM pro_main WHERE pro_main.ProjectID>0").then(data => { totalData = data; });
-    await utils.totaldata("SELECT COUNT(ProjectID) AS total FROM pro_main WHERE pro_main.ProjectID>0").then(data => {totalData = data;});
+    // await utils.totaldata("SELECT COUNT(ProjectID) AS total FROM pro_main WHERE pro_main.ProjectID>0").then(data => {totalData = data;});
 
     // const value = await totaldata();
 
@@ -651,8 +660,9 @@ Router.post('/search/angular-datatable', async function (req, res) {
         `SELECT DISTINCT pro_main.ProjectName, list_proprole.Str1 AS ProjectRole, pro_main.AwardYear, pro_main.ProjectNo, list_proocategory.Str1 AS OwnerCategory, 
         com_main.CompanyName AS ComID, list_projecttype.Str1 AS PrimaryProjectType, pro_main.SecondaryProjectType, cao_main.Name AS Owner, 
         cao_main_1.Name AS Client, pro_main.ProjectAgreementNo, emp_main.EmployeeID AS ProjectManager, list_prostatus.Str1 AS ProjectStatus, 
-        proposal_main.ProposalNo AS ProposalID, pro_main.ProjectID
-        FROM  pro_main LEFT OUTER JOIN
+        proposal_main.ProposalNo AS ProposalID, pro_main.ProjectID,
+        (select count(*) from pro_main WHERE pro_main.ProjectID>0) as totaldata
+        FROM pro_main LEFT OUTER JOIN
         list_prostatus ON pro_main.ProjectStatus = list_prostatus.ListID LEFT OUTER JOIN
         list_projecttype ON pro_main.PrimaryProjectType = list_projecttype.ListID LEFT OUTER JOIN
         list_proocategory ON pro_main.OwnerCategory = list_proocategory.ListID LEFT OUTER JOIN
@@ -897,12 +907,20 @@ Router.post('/search/angular-datatable', async function (req, res) {
                 if (!filterpresent) {
                     // totalFiltered = totalbeforefilter;
                     //2023 important. if no filter is present totalFiltered remains totalData in table
+                    //2024
+                    if (rows.length>0) {
+                        totalData = rows[0].totaldata;
+                    }
                     totalFiltered = totalData;
                 }
                 else {
                     // totalFiltered = rows.length;
                     //2023 important. if filter is present then get totalFiltered value totalbeforelimitandoffset
                     // before limit and offset is applied to sql string
+                    //2024
+                    if (rows.length>0) {
+                        totalData = rows[0].totaldata;
+                    }
                     totalFiltered = totalbeforelimitandoffset;
 
                 }
@@ -938,6 +956,10 @@ Router.post('/search/angular-datatable', async function (req, res) {
 
         mysqlConnection.query(sql, (err, rows, fields) => {
             if (!err) {
+                //2024
+                if (rows.length>0) {
+                    totalData = rows[0].totaldata;
+                }
                 totalFiltered = rows.length
                 res.json({
                     "draw": draw,
