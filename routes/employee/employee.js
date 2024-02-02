@@ -1114,7 +1114,7 @@ Router.post('/angular-datatable', async function (req, res) {
     //         WHERE (emp_main.EmpID > 0)`
 
 
-
+  var sqlWhere='';
   let sql =
   `SELECT DISTINCT emp_main.EmpID, emp_main.EmployeeID, emp_main.Firstname, emp_main.Lastname, com_main.CompanyName AS ComID, 
       list_empjobtitle.Str1 AS JobTitle, list_department.Str1 AS Department, list_empregistration.Str1 AS Registration, emp_main.HireDate, 
@@ -1138,20 +1138,15 @@ Router.post('/angular-datatable', async function (req, res) {
       pro_main ON pro_team.ProjectID = pro_main.ProjectID WHERE emp_main.EmpID>0`
 
 
-
-
-
-
- 
  
     if (search == "") {
         // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
 
         // 2024 edited for showing all records
-        if (limit==-1) {
-            sql = sql + ` order by ${col} ${orderdir} `;
+        if (limit == -1) {
+            sql = sql + sqlWhere + ` order by ${col} ${orderdir} `;
         } else {
-            sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+            sql = sql + sqlWhere + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
         }
         
         // sql = sql + ` order by ${col} ${orderdir} `;
@@ -1162,7 +1157,9 @@ Router.post('/angular-datatable', async function (req, res) {
 
             if (!err) {
                 
-                totalFiltered = totalData;
+                // totalFiltered = totalData;
+                totalData = rows[0].totaldata;
+                totalFiltered = rows[0].totalfiltered;
                 
                 res.json({
                     "draw": draw,
@@ -1178,41 +1175,68 @@ Router.post('/angular-datatable', async function (req, res) {
 
     } else {
 
-        sql = sql + ` AND Firstname LIKE '%${search}%'`;
-        sql = sql + ` OR Lastname LIKE '%${search}%'`;
-        sql = sql + ` OR list_empjobtitle.str1 LIKE '%${search}%'`;
-        sql = sql + ` OR list_empregistration.str1 LIKE '%${search}%'`;
-        sql = sql + ` OR list_department.Str1 LIKE '%${search}%'`;
-        sql = sql + ` OR emp_main.HireDate LIKE '%${search}%'`;
-        sql = sql + ` OR emp_main.EmployeeID LIKE '%${search}%'`;
+        // sqlWhere = sqlWhere + ` AND Firstname LIKE '%${search}%'`;
+        // sqlWhere = sqlWhere + ` OR Lastname LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` AND emp_main.EmployeeID LIKE '%${search}%'`;        
+        sqlWhere = sqlWhere + ` OR list_empjobtitle.str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR list_empregistration.str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR list_department.Str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR emp_main.HireDate LIKE '%${search}%'`;
+
+
+
+        sql =
+        `SELECT DISTINCT emp_main.EmpID, emp_main.EmployeeID, emp_main.Firstname, emp_main.Lastname, com_main.CompanyName AS ComID, 
+            list_empjobtitle.Str1 AS JobTitle, list_department.Str1 AS Department, list_empregistration.Str1 AS Registration, emp_main.HireDate, 
+            list_disciplinesf254.Str1 AS DisciplineSF254, list_disciplinesf330.Str2 AS DisciplineSF330, list_empstatus.Str1 AS EmployeeStatus, 
+            emp_main.ExpWithOtherFirm, 
+            (select count(*) from emp_main WHERE emp_main.EmpID>0) as totaldata, 
+            (select count(*) from emp_main WHERE emp_main.EmpID>0 ${sqlWhere}) as totalfiltered 
+            FROM emp_main LEFT OUTER JOIN
+            list_empregistration ON emp_main.Registration = list_empregistration.ListID LEFT OUTER JOIN
+            list_disciplinesf254 ON emp_main.DisciplineSF254 = list_disciplinesf254.ListID LEFT OUTER JOIN
+            list_disciplinesf330 ON emp_main.DisciplineSF330 = list_disciplinesf330.ListID LEFT OUTER JOIN
+            list_empjobtitle ON emp_main.JobTitle = list_empjobtitle.ListID LEFT OUTER JOIN
+            list_department ON emp_main.Department = list_department.ListID LEFT OUTER JOIN
+            list_empstatus ON emp_main.EmployeeStatus = list_empstatus.ListID LEFT OUTER JOIN
+            list_empprefix ON emp_main.Prefix = list_empprefix.ListID LEFT OUTER JOIN
+            list_empsuffix ON emp_main.Suffix = list_empsuffix.ListID LEFT OUTER JOIN
+            com_main ON emp_main.ComID = com_main.ComID LEFT OUTER JOIN
+            emp_degree ON emp_main.EmpID = emp_degree.EmpID LEFT OUTER JOIN
+            emp_training ON emp_main.EmpID = emp_training.EmpID LEFT OUTER JOIN
+            pro_team ON emp_main.EmpID = pro_team.EmpID LEFT OUTER JOIN
+            pro_main ON pro_team.ProjectID = pro_main.ProjectID WHERE emp_main.EmpID>0`
+
 
 
         // //2023 important. When limit and offset is used to sql string then total length always shows the "limit"
         // So total filtered record is calculated before applying limit and
  
-        let totalbeforelimitandoffset = 0;
-        let sql3 = sql + ` order by ${col} ${orderdir} `;
+        // let totalbeforelimitandoffset = 0;
+        // let sql3 = sql + ` order by ${col} ${orderdir} `;
         // mysqlConnection.query(sql3, (err, rows3, fields) => {
         //     totalbeforelimitandoffset = rows3.length;
         // });
     // ** 2024 After using pool conn the mysql order has changed. So to keep the order async await is used
     // https://www.google.com/search?q=async+function+%5Bobject+Promise%5D&oq=async+function+%5Bobject+Promise%5D&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB7SAQgxMjIyajBqN6gCALACAA&sourceid=chrome&ie=UTF-8
     // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
-       await utils.totalbeforelimtandoff(sql3).then(data => {totalbeforelimitandoffset = data;});
+    //    await utils.totalbeforelimtandoff(sql3).then(data => {totalbeforelimitandoffset = data;});
 
 
         // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
 
         // 2024 edited for showing all records
-        if (limit==-1) {
-            sql = sql + ` order by ${col} ${orderdir} `;
+        if (limit == -1) {
+            sql = sql + sqlWhere + ` order by ${col} ${orderdir} `;
         } else {
-            sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+            sql = sql + sqlWhere + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
         }
-
-     mysqlConnection.query(sql, (err, rows, fields) => {
+ 
+        mysqlConnection.query(sql, (err, rows, fields) => {
             if (!err) {
-                totalFiltered = totalbeforelimitandoffset
+                // totalFiltered = totalbeforelimitandoffset
+                totalData = rows[0].totaldata;
+                totalFiltered = rows[0].totalfiltered;
                 res.json({
                     "draw": draw,
                     "recordsTotal": totalData,
