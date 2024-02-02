@@ -58,7 +58,8 @@ async function maxid(table, field) {
 async function totaldata(sql1) {
     return new Promise((resolve, reject) => {
         let totaldata;
-        mysqlConnection.query(sql1, (err, rows, fields) => {
+        // mysqlConnection.query(sql1, (err, rows, fields) => {
+            mysqlConnection.query(sql1, (err, rows, fields) => {
             if (!err) {
                 // totaldata=rows.length.toString();
                 totaldata=rows[0].total; //for sql count
