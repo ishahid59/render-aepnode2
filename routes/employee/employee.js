@@ -1918,88 +1918,90 @@ Router.post('/search/angular-datatable', async function (req, res) {
 
         });
 
-    } else {
-        // console.log(sql);
-        // sql = sql + ` AND firstname LIKE '%${search}%'`;
-        // sql = sql + ` OR lastname LIKE '%${search}%'`;
-        // sql = sql + ` OR list_empjobtitle.str1 LIKE '%${search}%'`;
-        // sql = sql + ` OR list_empregistration.str1 LIKE '%${search}%'`;
+    } 
+    // else {
+    //     // console.log(sql);
+    //     // sql = sql + ` AND firstname LIKE '%${search}%'`;
+    //     // sql = sql + ` OR lastname LIKE '%${search}%'`;
+    //     // sql = sql + ` OR list_empjobtitle.str1 LIKE '%${search}%'`;
+    //     // sql = sql + ` OR list_empregistration.str1 LIKE '%${search}%'`;
 
 
-        // sql = sql + sqlWhere + ` AND Firstname LIKE '%${search}%'`;
-        // sql = sql + sqlWhere + ` OR Lastname LIKE '%${search}%'`;
-        // sql = sql + sqlWhere + ` OR list_empjobtitle.str1 LIKE '%${search}%'`;
-        // sql = sql + sqlWhere + ` OR list_empregistration.str1 LIKE '%${search}%'`;
-        // sql = sql + sqlWhere + ` OR list_department.Str1 LIKE '%${search}%'`;
-        // sql = sql + sqlWhere + ` OR emp_main.HireDate LIKE '%${search}%'`;
-        // sql = sql + sqlWhere + ` OR emp_main.EmployeeID LIKE '%${search}%'`;
+    //     // sql = sql + sqlWhere + ` AND Firstname LIKE '%${search}%'`;
+    //     // sql = sql + sqlWhere + ` OR Lastname LIKE '%${search}%'`;
+    //     // sql = sql + sqlWhere + ` OR list_empjobtitle.str1 LIKE '%${search}%'`;
+    //     // sql = sql + sqlWhere + ` OR list_empregistration.str1 LIKE '%${search}%'`;
+    //     // sql = sql + sqlWhere + ` OR list_department.Str1 LIKE '%${search}%'`;
+    //     // sql = sql + sqlWhere + ` OR emp_main.HireDate LIKE '%${search}%'`;
+    //     // sql = sql + sqlWhere + ` OR emp_main.EmployeeID LIKE '%${search}%'`;
 
 
-        sqlWhere = sqlWhere + ` AND Firstname LIKE '%${search}%'`;
-        sqlWhere = sqlWhere + ` OR Lastname LIKE '%${search}%'`;
-        sqlWhere = sqlWhere + ` OR list_empjobtitle.str1 LIKE '%${search}%'`;
-        sqlWhere = sqlWhere + ` OR list_empregistration.str1 LIKE '%${search}%'`;
-        sqlWhere = sqlWhere + ` OR list_department.Str1 LIKE '%${search}%'`;
-        sqlWhere = sqlWhere + ` OR emp_main.HireDate LIKE '%${search}%'`;
-        sqlWhere = sqlWhere + ` OR emp_main.EmployeeID LIKE '%${search}%'`;
+    //     // sqlWhere = sqlWhere + ` AND Firstname LIKE '%${search}%'`;
+    //     // sqlWhere = sqlWhere + ` OR Lastname LIKE '%${search}%'`;
+    //     sqlWhere = sqlWhere + ` AND emp_main.EmployeeID LIKE '%${search}%'`;        
+    //     sqlWhere = sqlWhere + ` OR list_empjobtitle.str1 LIKE '%${search}%'`;
+    //     sqlWhere = sqlWhere + ` OR list_empregistration.str1 LIKE '%${search}%'`;
+    //     sqlWhere = sqlWhere + ` OR list_department.Str1 LIKE '%${search}%'`;
+    //     sqlWhere = sqlWhere + ` OR emp_main.HireDate LIKE '%${search}%'`;
+        
 
 
-        sql =
-        `SELECT DISTINCT emp_main.EmpID, emp_main.EmployeeID, emp_main.Firstname, emp_main.Lastname, com_main.CompanyName AS ComID, 
-            list_empjobtitle.Str1 AS JobTitle, list_department.Str1 AS Department, list_empregistration.Str1 AS Registration, emp_main.HireDate, 
-            list_disciplinesf254.Str1 AS DisciplineSF254, list_disciplinesf330.Str2 AS DisciplineSF330, list_empstatus.Str1 AS EmployeeStatus, 
-            emp_main.ExpWithOtherFirm, 
-            (select count(*) from emp_main WHERE emp_main.EmpID>0) as totaldata, 
-            (select count(*) from emp_main WHERE emp_main.EmpID>0 ${sqlWhere}) as totalfiltered 
-            FROM emp_main LEFT OUTER JOIN
-            list_empregistration ON emp_main.Registration = list_empregistration.ListID LEFT OUTER JOIN
-            list_disciplinesf254 ON emp_main.DisciplineSF254 = list_disciplinesf254.ListID LEFT OUTER JOIN
-            list_disciplinesf330 ON emp_main.DisciplineSF330 = list_disciplinesf330.ListID LEFT OUTER JOIN
-            list_empjobtitle ON emp_main.JobTitle = list_empjobtitle.ListID LEFT OUTER JOIN
-            list_department ON emp_main.Department = list_department.ListID LEFT OUTER JOIN
-            list_empstatus ON emp_main.EmployeeStatus = list_empstatus.ListID LEFT OUTER JOIN
-            list_empprefix ON emp_main.Prefix = list_empprefix.ListID LEFT OUTER JOIN
-            list_empsuffix ON emp_main.Suffix = list_empsuffix.ListID LEFT OUTER JOIN
-            com_main ON emp_main.ComID = com_main.ComID LEFT OUTER JOIN
-            emp_degree ON emp_main.EmpID = emp_degree.EmpID LEFT OUTER JOIN
-            emp_training ON emp_main.EmpID = emp_training.EmpID LEFT OUTER JOIN
-            pro_team ON emp_main.EmpID = pro_team.EmpID LEFT OUTER JOIN
-            pro_main ON pro_team.ProjectID = pro_main.ProjectID WHERE emp_main.EmpID>0`
+    //     sql =
+    //     `SELECT DISTINCT emp_main.EmpID, emp_main.EmployeeID, emp_main.Firstname, emp_main.Lastname, com_main.CompanyName AS ComID, 
+    //         list_empjobtitle.Str1 AS JobTitle, list_department.Str1 AS Department, list_empregistration.Str1 AS Registration, emp_main.HireDate, 
+    //         list_disciplinesf254.Str1 AS DisciplineSF254, list_disciplinesf330.Str2 AS DisciplineSF330, list_empstatus.Str1 AS EmployeeStatus, 
+    //         emp_main.ExpWithOtherFirm, 
+    //         (select count(*) from emp_main WHERE emp_main.EmpID>0) as totaldata, 
+    //         (select count(*) from emp_main WHERE emp_main.EmpID>0 ${sqlWhere}) as totalfiltered 
+    //         FROM emp_main LEFT OUTER JOIN
+    //         list_empregistration ON emp_main.Registration = list_empregistration.ListID LEFT OUTER JOIN
+    //         list_disciplinesf254 ON emp_main.DisciplineSF254 = list_disciplinesf254.ListID LEFT OUTER JOIN
+    //         list_disciplinesf330 ON emp_main.DisciplineSF330 = list_disciplinesf330.ListID LEFT OUTER JOIN
+    //         list_empjobtitle ON emp_main.JobTitle = list_empjobtitle.ListID LEFT OUTER JOIN
+    //         list_department ON emp_main.Department = list_department.ListID LEFT OUTER JOIN
+    //         list_empstatus ON emp_main.EmployeeStatus = list_empstatus.ListID LEFT OUTER JOIN
+    //         list_empprefix ON emp_main.Prefix = list_empprefix.ListID LEFT OUTER JOIN
+    //         list_empsuffix ON emp_main.Suffix = list_empsuffix.ListID LEFT OUTER JOIN
+    //         com_main ON emp_main.ComID = com_main.ComID LEFT OUTER JOIN
+    //         emp_degree ON emp_main.EmpID = emp_degree.EmpID LEFT OUTER JOIN
+    //         emp_training ON emp_main.EmpID = emp_training.EmpID LEFT OUTER JOIN
+    //         pro_team ON emp_main.EmpID = pro_team.EmpID LEFT OUTER JOIN
+    //         pro_main ON pro_team.ProjectID = pro_main.ProjectID WHERE emp_main.EmpID>0`
+
+     
+
+    //     sql = sql + sqlWhere + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
 
 
+    //     // strsql = strsql + ` AND Emp_Main.EmployeeID LIKE '%${search}%'`;
+    //     // strsql = strsql + ` OR List_EmpJobTitle.str1 LIKE '%${search}%'`;
+    //     // // strsql = strsql + ` OR List_Department.str1 LIKE '%${search}%'`;
+    //     // strsql = strsql + ` OR List_EmpRegistration.str1 LIKE '%${search}%'`;
+    //     // // strsql = strsql + ` OR List_DisciplineSF254.str1 LIKE '%${search}%'`;
+    //     // // strsql = strsql + ` OR List_DisciplineSF330.str2 LIKE '%${search}%'`;
 
-        sql = sql + sqlWhere + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+    //     console.log("test3 " + sql);
 
+    //     mysqlConnection.query(sql, (err, rows, fields) => {
+    //         if (!err) {
+    //             // totalFiltered = rows.length
+    //             // totalFiltered = rows[0].totalfiltered;
+    //             totalData = rows[0].totaldata;
+    //             totalFiltered = rows[0].totalfiltered;
+    //             res.json({
+    //                 "draw": draw,
+    //                 "recordsTotal": totalData,
+    //                 "recordsFiltered": totalFiltered,
+    //                 "data": rows
+    //             });
+    //         }
+    //         else {
+    //             console.log(err);
+    //         }
+  
+    //     });
 
-        // strsql = strsql + ` AND Emp_Main.EmployeeID LIKE '%${search}%'`;
-        // strsql = strsql + ` OR List_EmpJobTitle.str1 LIKE '%${search}%'`;
-        // // strsql = strsql + ` OR List_Department.str1 LIKE '%${search}%'`;
-        // strsql = strsql + ` OR List_EmpRegistration.str1 LIKE '%${search}%'`;
-        // // strsql = strsql + ` OR List_DisciplineSF254.str1 LIKE '%${search}%'`;
-        // // strsql = strsql + ` OR List_DisciplineSF330.str2 LIKE '%${search}%'`;
-
-        console.log("test3 " + sql);
-
-        mysqlConnection.query(sql, (err, rows, fields) => {
-            if (!err) {
-                // totalFiltered = rows.length
-                // totalFiltered = rows[0].totalfiltered;
-                totalData = rows[0].totaldata;
-                totalFiltered = rows[0].totalfiltered;
-                res.json({
-                    "draw": draw,
-                    "recordsTotal": totalData,
-                    "recordsFiltered": totalFiltered,
-                    "data": rows
-                });
-            }
-            else {
-                console.log(err);
-            }
-
-        });
-
-    } // end else
+    // } // end else
 });
 
 
