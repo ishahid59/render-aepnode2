@@ -47,31 +47,32 @@ const mysql = require('mysql');
   // multipleStatements: true 
 
 
-  // Siteground compulink account
-  // // host   : '35.212.2.98',//
-  // siteground working with allowing remote access for 202.125.75.202 in siteground website
-  // host     :'35.212.2.98',//'gvam1290.siteground.biz',
-  // host: '35.212.92.202',//'gvam1261.siteground.biz',
-  host: '35.212.92.202',//'gvam1261.siteground.biz',
-  user     : 'u83v3o6dxmnkh',
-  password : '$^##22#c)d5i',
-  // database : 'dbqpujqwr6gsfc',
-  database : 'db5hfh5k9wmqaz',
-  port:'3306',
-  multipleStatements: true ,
-  connectionLimit: 10
-
-
-  // // host   : '35.212.2.98',//
+  // // Siteground compulink account
+  // // // host   : '35.212.2.98',//
   // // siteground working with allowing remote access for 202.125.75.202 in siteground website
-  // host     :'35.212.2.98',//'gvam1290.siteground.biz',
-  // user     : 'u6cdiqq87smud',
-  // password : 'dxxiri7kbhmb',
+  // // host     :'35.212.2.98',//'gvam1290.siteground.biz',
+  // // host: '35.212.92.202',//'gvam1261.siteground.biz',
+  // host: '35.212.92.202',//'gvam1261.siteground.biz',
+  // user     : 'u83v3o6dxmnkh',
+  // password : '$^##22#c)d5i',
   // // database : 'dbqpujqwr6gsfc',
-  // database : 'dbbbgmunthoxe8',
+  // database : 'db5hfh5k9wmqaz',
   // port:'3306',
-  // multipleStatements: true,
+  // multipleStatements: true ,
   // connectionLimit: 10
+
+
+  // host   : '35.212.2.98',//
+  // siteground working with allowing remote access for 202.125.75.202 in siteground website
+  host     :'35.212.2.98',//'gvam1290.siteground.biz',
+  // host: '35.212.92.202',
+  user     : 'u6cdiqq87smud',
+  password : 'dxxiri7kbhmb',
+  // database : 'dbqpujqwr6gsfc',
+  database : 'dbbbgmunthoxe8',
+  port:'3306',
+  multipleStatements: true,
+  connectionLimit: 10
 
 
 
@@ -103,13 +104,13 @@ const mysql = require('mysql');
 
 
 
-// // Check pool connection
-// mysqlConnection.query("SELECT EmpID FROM  emp_main", (err, result) => {
-//   if (err) {
-//     console.log("Connection Failure" + err)
-//   }
-//   console.log("Database Connection Successful");
-// });
+// Check pool connection
+mysqlConnection.query("SELECT EmpID FROM  emp_main", (err, result) => {
+  if (err) {
+    console.log("Connection Failure" + err)
+  }
+  console.log("Database Connection Successful");
+});
 
 
 
