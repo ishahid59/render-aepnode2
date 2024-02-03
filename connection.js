@@ -103,13 +103,13 @@ const mysql = require('mysql');
 
 
 
-// Check pool connection
-mysqlConnection.query("SELECT EmpID FROM  emp_main", (err, result) => {
-  if (err) {
-    console.log("Connection Failure" + err)
-  }
-  console.log("Database Connection Successful");
-});
+// // Check pool connection
+// mysqlConnection.query("SELECT EmpID FROM  emp_main", (err, result) => {
+//   if (err) {
+//     console.log("Connection Failure" + err)
+//   }
+//   console.log("Database Connection Successful");
+// });
 
 
 
