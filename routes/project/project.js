@@ -1674,11 +1674,11 @@ Router.post('/search/angular-datatable', async function (req, res) {
 
     } else {
 
-        sql = sql + ` AND pro_main.ProjectNo LIKE '%${search}%'`;
-        sql = sql + ` OR pro_main.ProjectName LIKE '%${search}%'`;
-        sql = sql + ` OR list_projecttype.Str1 LIKE '%${search}%'`;
-        sql = sql + ` OR pro_main.AwardYear LIKE '%${search}%'`;
-        sql = sql + ` OR cao_main.Name LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` AND pro_main.ProjectNo LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR pro_main.ProjectName LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR list_projecttype.Str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR pro_main.AwardYear LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR cao_main.Name LIKE '%${search}%'`;
 
         // await utils.totalbeforelimtandoff(sql).then(data => {totalbeforelimitandoffset = data;});
 
