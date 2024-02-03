@@ -468,7 +468,7 @@ Router.get('/projectdetails/:projectid', function (req, res) {
 
 
 
-// 2024 USING THIS FOR ANGULAR DATATABLE 2024
+// 2024 USING THIS FOR ANGULAR DATATABLE 2024(count records used in one query for speed)
 // https://stackoverflow.com/questions/33889922/how-to-get-the-number-of-total-results-when-there-is-limit-in-query
 // Router.post('/search/angular-datatable',authenticateToken, function (req, res) { // with local auth
 Router.post('/angular-datatable', async function (req, res) {
