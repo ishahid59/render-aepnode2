@@ -1707,9 +1707,9 @@ Router.post('/search/angular-datatable', async function (req, res) {
 
         // 2024 edited for showing all records
         if (limit==-1) {
-            sql = sql + ` order by ${col} ${orderdir} `;
+            sql = sql + sqlWhere + ` order by ${col} ${orderdir} `;
         } else {
-            sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+            sql = sql + sqlWhere + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
         }
         
         mysqlConnection.query(sql, (err, rows, fields) => {
