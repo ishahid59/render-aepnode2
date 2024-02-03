@@ -1606,13 +1606,23 @@ Router.post('/search/angular-datatable', async function (req, res) {
             // sql = sql + ` OR list_empregistration.str1 LIKE '%${search}%'`;
 
 
-            sql = sql + ` AND Firstname LIKE '%${search}%'`;
-            sql = sql + ` OR Lastname LIKE '%${search}%'`;
+            // sql = sql + ` AND Firstname LIKE '%${search}%'`;
+            // sql = sql + ` OR Lastname LIKE '%${search}%'`;
+            sql = sql + ` AND emp_main.EmployeeID LIKE '%${search}%'`;
             sql = sql + ` OR list_empjobtitle.str1 LIKE '%${search}%'`;
             sql = sql + ` OR list_empregistration.str1 LIKE '%${search}%'`;
             sql = sql + ` OR list_department.Str1 LIKE '%${search}%'`;
             sql = sql + ` OR emp_main.HireDate LIKE '%${search}%'`;
-            sql = sql + ` OR emp_main.EmployeeID LIKE '%${search}%'`;
+            
+
+            await utils.totalbeforelimtandoff(sql).then(data => {totalbeforelimitandoffset = data;});
+
+            // 2024 edited for showing all records
+            if (limit==-1) {
+                sql = sql + ` order by ${col} ${orderdir} `;
+            } else {
+                sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+            }
 
 
             // strsql = strsql + ` AND Emp_Main.EmployeeID LIKE '%${search}%'`;
@@ -1630,7 +1640,8 @@ Router.post('/search/angular-datatable', async function (req, res) {
                     if (rows.length>0) {
                         totalData = rows[0].totaldata;
                     }
-                    totalFiltered = rows.length
+                // totalFiltered = rows.length;
+                totalFiltered = totalbeforelimitandoffset;//rows.length;
                     res.json({
                         "draw": draw,
                         "recordsTotal": totalData,
@@ -1887,13 +1898,32 @@ Router.post('/search/angular-datatable', async function (req, res) {
 //         // 2024 Avoid using multiple sql for speed
 //         // https://stackoverflow.com/questions/33889922/how-to-get-the-number-of-total-results-when-there-is-limit-in-query
         
+//     let from = ` FROM emp_main LEFT OUTER JOIN
+//         list_empregistration ON emp_main.Registration = list_empregistration.ListID LEFT OUTER JOIN
+//         list_disciplinesf254 ON emp_main.DisciplineSF254 = list_disciplinesf254.ListID LEFT OUTER JOIN
+//         list_disciplinesf330 ON emp_main.DisciplineSF330 = list_disciplinesf330.ListID LEFT OUTER JOIN
+//         list_empjobtitle ON emp_main.JobTitle = list_empjobtitle.ListID LEFT OUTER JOIN
+//         list_department ON emp_main.Department = list_department.ListID LEFT OUTER JOIN
+//         list_empstatus ON emp_main.EmployeeStatus = list_empstatus.ListID LEFT OUTER JOIN
+//         list_empprefix ON emp_main.Prefix = list_empprefix.ListID LEFT OUTER JOIN
+//         list_empsuffix ON emp_main.Suffix = list_empsuffix.ListID LEFT OUTER JOIN
+//         com_main ON emp_main.ComID = com_main.ComID LEFT OUTER JOIN
+//         emp_degree ON emp_main.EmpID = emp_degree.EmpID LEFT OUTER JOIN
+//         emp_training ON emp_main.EmpID = emp_training.EmpID LEFT OUTER JOIN
+//         pro_team ON emp_main.EmpID = pro_team.EmpID LEFT OUTER JOIN
+//         pro_main ON pro_team.ProjectID = pro_main.ProjectID WHERE emp_main.EmpID>0 `
+        
+//         // (select count(*) from emp_main WHERE emp_main.EmpID>0 ${sqlWhere}) as totalfiltered 
+
+
+
 //         let sql =
 //         `SELECT DISTINCT emp_main.EmpID, emp_main.EmployeeID, emp_main.Firstname, emp_main.Lastname, com_main.CompanyName AS ComID, 
 //             list_empjobtitle.Str1 AS JobTitle, list_department.Str1 AS Department, list_empregistration.Str1 AS Registration, emp_main.HireDate, 
 //             list_disciplinesf254.Str1 AS DisciplineSF254, list_disciplinesf330.Str2 AS DisciplineSF330, list_empstatus.Str1 AS EmployeeStatus, 
 //             emp_main.ExpWithOtherFirm, 
 //             (select count(*) from emp_main WHERE emp_main.EmpID>0) as totaldata, 
-//             (select count(*) from emp_main WHERE emp_main.EmpID>0 ${sqlWhere}) as totalfiltered 
+//             (select count(*) ${from} ${sqlWhere}) as totalfiltered 
 //             FROM emp_main LEFT OUTER JOIN
 //             list_empregistration ON emp_main.Registration = list_empregistration.ListID LEFT OUTER JOIN
 //             list_disciplinesf254 ON emp_main.DisciplineSF254 = list_disciplinesf254.ListID LEFT OUTER JOIN
@@ -1926,7 +1956,7 @@ Router.post('/search/angular-datatable', async function (req, res) {
 //         // await utils.totalbeforelimtandoff(sql3).then(data => {totalbeforelimitandoffset = data;});
 
 
-
+ 
 //     if (search == "") {
 //         // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
 
@@ -1935,7 +1965,7 @@ Router.post('/search/angular-datatable', async function (req, res) {
 //             sql = sql + sqlWhere + ` order by ${col} ${orderdir} `;
 //         } else {
 //             sql = sql + sqlWhere + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
-//             // console.log("test2 " + sql);
+//             console.log("test2 " + sql);
 //         }
 //         // sql = sql + ` order by ${col} ${orderdir} `;
 //         mysqlConnection.query(sql, (err, rows, fields) => {

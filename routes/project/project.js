@@ -942,7 +942,6 @@ Router.post('/search/angular-datatable', async function (req, res) {
         });
 
     } else {
-
         // sql = sql + ` AND Firstname LIKE '%${search}%'`;
         // sql = sql + ` OR Lastname LIKE '%${search}%'`;
         // sql = sql + ` OR list_EmpJobTitle.str1 LIKE '%${search}%'`;
@@ -954,14 +953,25 @@ Router.post('/search/angular-datatable', async function (req, res) {
         sql = sql + ` OR pro_main.AwardYear LIKE '%${search}%'`;
         sql = sql + ` OR cao_main.Name LIKE '%${search}%'`;
 
+        await utils.totalbeforelimtandoff(sql).then(data => {totalbeforelimitandoffset = data;});
 
+        // 2024 edited for showing all records
+        if (limit==-1) {
+            sql = sql + ` order by ${col} ${orderdir} `;
+        } else {
+            sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+        }
+        
         mysqlConnection.query(sql, (err, rows, fields) => {
             if (!err) {
                 //2024
                 if (rows.length>0) {
                     totalData = rows[0].totaldata;
                 }
-                totalFiltered = rows.length
+                // totalFiltered = rows.length;
+                totalFiltered = totalbeforelimitandoffset;//rows.length;
+                
+                console.log("totalFiltered "+totalFiltered);
                 res.json({
                     "draw": draw,
                     "recordsTotal": totalData,
