@@ -192,6 +192,37 @@ Router.post('/prophoto-angular-datatable', function (req, res) { // sending empi
 
 
 
+Router.get('/getimagedata/:id', (req, res) => {
+
+    // let sql2 = `SELECT pro_photo.PhotoName, pro_photo.ImageData
+    //     FROM pro_photo 
+    //     WHERE pro_photo.ProjectID=? AND pro_photo.PhotoName LIKE '%pds%' ORDER BY pro_photo.PhotoName `
+
+
+    let sql = `SELECT pro_photo.ID, pro_photo.ProjectID, pro_photo.PhotoName, pro_photo.ImageData, pro_main.ProjectNo 
+        FROM pro_photo LEFT OUTER JOIN
+        pro_main ON pro_photo.ProjectID =  pro_main.ProjectID 
+        WHERE pro_photo.PhotoName LIKE '%pds%' and pro_photo.ProjectID=? `
+
+
+    mysqlConnection.query(sql, req.param('id'), (err, rows, fields) => {
+        if (!err) {
+            res.send(rows); //NOTE Have to send the [0] row
+            console.log(rows);
+            // res.render("Hello.ejs", {name:rows});     
+            0
+        } else {
+            console.log(err); 
+        }
+    });
+
+});
+
+
+
+
+
+
     // EDIT GET
     Router.get('/:id',  (req, res) => {
         // let sql = "SELECT emp_degree.id, emp_degree.degree as str1,emp_degree.empid FROM emp_degree WHERE emp_degree.empid=? ORDER BY emp_degree.id";
