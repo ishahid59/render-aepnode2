@@ -60,7 +60,7 @@ const mysql = require('mysql');
   port:'3306',
   multipleStatements: true ,
   connectionLimit: 10
-  
+   
 
   // // host   : '35.212.2.98',//
   // // siteground working with allowing remote access for 202.125.75.202 in siteground website

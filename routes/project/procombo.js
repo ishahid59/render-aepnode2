@@ -216,7 +216,16 @@ Router.get('/cmbstate',  (req, res) => {
 })
 
 
-
+Router.get('/cmbprophoto',  (req, res) => {
+    let sql = "SELECT * FROM list_prophoto WHERE list_prophoto.ListID>-1 ORDER BY list_prophoto.ListID";
+   mysqlConnection.query(sql, (err, rows, fields) => {
+       if (!err) {
+           res.json(rows);
+       } else {
+           console.log(err);
+       }
+   });
+})
 
     
 module.exports = Router;

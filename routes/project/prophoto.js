@@ -91,13 +91,19 @@ Router.post('/prophoto-angular-datatable', function (req, res) { // sending empi
 
         `SELECT pro_photo.ID, pro_photo.PhotoName, pro_photo.CreateDate, emp_main.EmployeeID AS disCreatedBy, pro_photo.LastModifyDate, emp_main_1.EmployeeID AS disLastModifiedBy, pro_photo.CreatedBy, pro_photo.LastModifiedBy, 
         pro_photo.ImageData, pro_photo.Description, pro_photo.ProjectID,  pro_main.ProjectNo 
-    FROM     pro_photo LEFT OUTER JOIN
+    FROM pro_photo LEFT OUTER JOIN
          pro_main ON pro_photo.ProjectID =  pro_main.ProjectID LEFT OUTER JOIN
         emp_main AS emp_main_1 ON pro_photo.LastModifiedBy = emp_main_1.EmpID LEFT OUTER JOIN
         emp_main ON pro_photo.CreatedBy = emp_main.EmpID
-    WHERE  (pro_photo.ProjectID = ${req.body.projectid})`
+    WHERE (pro_photo.ProjectID = ${req.body.projectid})`
 
-
+    // `SELECT Pro_Photo.ID, Pro_Photo.CreateDate, Emp_Main.EmployeeID AS disCreatedBy, Pro_Photo.LastModifyDate, emp_main_1.EmployeeID AS disLastModifiedBy, Pro_Photo.CreatedBy, Pro_Photo.LastModifiedBy, Pro_Photo.ImageData, Pro_Photo.Description, Pro_Photo.ProjectID, Pro_Main.ProjectNo,  List_ProPhoto.Str1 AS PhotoName
+    // FROM Pro_Photo INNER JOIN  
+    // List_ProPhoto ON Pro_Photo.PhotoName =  List_ProPhoto.ListID LEFT OUTER JOIN 
+    // Pro_Main ON Pro_Photo.ProjectID = Pro_Main.ProjectID LEFT OUTER JOIN 
+    // Emp_Main AS emp_main_1 ON Pro_Photo.LastModifiedBy = emp_main_1.EmpID LEFT OUTER JOIN 
+    // Emp_Main ON Pro_Photo.CreatedBy = Emp_Main.EmpID 
+    // WHERE (Pro_Photo.ProjectID = ${req.body.projectid})`
 
     if (search == "") {
         // console.log("No Search");
@@ -110,8 +116,8 @@ Router.post('/prophoto-angular-datatable', function (req, res) { // sending empi
                totalFiltered = totalData; //totalbeforefilter
                 res.json({
                     "draw": draw,
-                    "recordsTotal": totalData, //totalData,
-                    "recordsFiltered": totalFiltered,
+                    "recordsTotal": 11,//totalData, //totalData,
+                    "recordsFiltered": 11,//totalFiltered,
                     "data": rows
                 });
             }
@@ -294,7 +300,7 @@ const storage = multer.diskStorage({
         // console.log("test : " + req.body.ProjectNo);
         var projectno = req.body.ProjectNo;
         balayAudPath = './public/img/prophoto/' + projectno + "";
-
+        // balayAudPath = 'https://www.compulinkbd.com/TestReport/' + projectno + "";
        fs.mkdirSync(balayAudPath, { recursive: true })
         cb(null, balayAudPath)
 
@@ -306,7 +312,7 @@ const storage = multer.diskStorage({
         // cb(null, req.body.PhotoName + path.extname(file.originalname));
     }
 });
-
+ 
 // const upload=multer({dest:"./public/img/empphoto/"})
 // const upload = multer({ storage: storage })
 const upload = multer(
