@@ -9,6 +9,7 @@ const multer = require('multer');
 const path = require('path');// for image path
 const fs = require("fs");
 const moment = require('moment');
+const utils = require('../utils');
 
 // Router.get('/all',authenticateToken,  function (req, res) {// with local auth
 
@@ -29,7 +30,7 @@ Router.get('/maxprophotoid', function (req, res) {
 
 
 
-Router.post('/prophoto-angular-datatable', function (req, res) { // sending empid in body now
+Router.post('/prophoto-angular-datatable', async  function (req, res) { // sending empid in body now
         
     // console.log(req.body);
     // return;
@@ -68,26 +69,32 @@ Router.post('/prophoto-angular-datatable', function (req, res) { // sending empi
     // let sql1 = `SELECT * FROM pro_descriptions WHERE pro_descriptions.id>0`;
     // let sql1 = `SELECT * FROM pro_descriptions WHERE pro_descriptions.ProjectID=`+ req.body.projectid + ``;//2023
     
-    let sql1 = `SELECT * FROM pro_photo WHERE pro_photo.ProjectID=`+ req.body.projectid + ``;//2023
+    // let sql1 = "SELECT * FROM pro_photo WHERE pro_photo.ProjectID="+ req.body.projectid;//2023
+
+    // mysqlConnection.query(sql1, (err, rows, fields) => {
+    //     totalData = rows.length;
+    //     // totalData =  rows[0].total;
+    //     totalbeforefilter = rows.length;
+    //     // totalbeforefilter =   rows[0].total;
+    // });
 
 
-    mysqlConnection.query(sql1, (err, rows, fields) => {
-        totalData = rows.length;
-        totalbeforefilter = rows.length;
-    });
+
+    // ** After using pool conn the mysql order has changed. So to keep the order async await is used
+    // https://www.google.com/search?q=async+function+%5Bobject+Promise%5D&oq=async+function+%5Bobject+Promise%5D&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB7SAQgxMjIyajBqN6gCALACAA&sourceid=chrome&ie=UTF-8
+    // https://medium.com/@lelianto.eko/callback-vs-promise-vs-async-await-in-javascri-f29a63d57f72#:~:text=A%20promise%20is%20an%20object,in%20a%20more%20elegant%20way.
+
+    await utils.totaldata("SELECT COUNT(ID) AS total FROM pro_photo WHERE pro_photo.ProjectID="+ req.body.projectid)
+        .then(data => {
+            totalData = data;
+        });
+    // const value = await totaldata();
+
+
+
+
 
     let sql = 
-
-
-
-        // `SELECT  pro_descriptions.ID, list_prodesitem.Str1 AS disItemName, pro_descriptions.Notes, pro_descriptions.Description, pro_descriptions.DescriptionPlainText, 
-        // pro_descriptions.ItemName, pro_descriptions.ProjectID
-        // FROM  pro_descriptions INNER JOIN
-        // list_prodesitem ON pro_descriptions.ItemName = list_prodesitem.ListID
-        // WHERE (pro_descriptions.ProjectID = `+ req.body.projectid + `)`
-
-        // `SELECT * FROM pro_photo 
-        // WHERE (pro_photo.ProjectID = `+ req.body.projectid + `)`
 
         `SELECT pro_photo.ID, pro_photo.PhotoName, pro_photo.CreateDate, emp_main.EmployeeID AS disCreatedBy, pro_photo.LastModifyDate, emp_main_1.EmployeeID AS disLastModifiedBy, pro_photo.CreatedBy, pro_photo.LastModifiedBy, 
         pro_photo.ImageData, pro_photo.Description, pro_photo.ProjectID,  pro_main.ProjectNo 
@@ -116,8 +123,8 @@ Router.post('/prophoto-angular-datatable', function (req, res) { // sending empi
                totalFiltered = totalData; //totalbeforefilter
                 res.json({
                     "draw": draw,
-                    "recordsTotal": 11,//totalData, //totalData,
-                    "recordsFiltered": 11,//totalFiltered,
+                    "recordsTotal": totalData, //totalData,
+                    "recordsFiltered": totalFiltered,
                     "data": rows
                 });
             }
