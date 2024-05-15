@@ -1,0 +1,4 @@
+npm start
+will start at port 500
+then
+http://localhost:5000/api/employee/all
