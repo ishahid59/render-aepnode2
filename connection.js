@@ -9,7 +9,8 @@ const mysql = require('mysql');
   // user     : 'root',
   // password : '',
   // // database : 'node12',
-  // database : 'aep',
+  // // database : 'aep',
+  // database : 'aep_blank_test',
   // multipleStatements: true
 
  
@@ -47,7 +48,23 @@ const mysql = require('mysql');
   // multipleStatements: true 
 
 
-  // Siteground compulink account
+  // // Siteground compulink account
+  // // // host   : '35.212.2.98',//
+  // // siteground working with allowing remote access for 202.125.75.202 in siteground website
+  // // host     :'35.212.2.98',//'gvam1290.siteground.biz',
+  // // host: '35.212.92.202',//'gvam1261.siteground.biz',
+  // host: '35.212.92.202',//'gvam1261.siteground.biz',
+  // user     : 'u83v3o6dxmnkh',
+  // password : '$^##22#c)d5i',
+  // // database : 'dbqpujqwr6gsfc',
+  // database : 'db5hfh5k9wmqaz',
+  // port:'3306',
+  // multipleStatements: true ,
+  // connectionLimit: 10
+
+
+  
+  // Siteground compulink account for aep_blank_data
   // // host   : '35.212.2.98',//
   // siteground working with allowing remote access for 202.125.75.202 in siteground website
   // host     :'35.212.2.98',//'gvam1290.siteground.biz',
@@ -56,11 +73,12 @@ const mysql = require('mysql');
   user     : 'u83v3o6dxmnkh',
   password : '$^##22#c)d5i',
   // database : 'dbqpujqwr6gsfc',
-  database : 'db5hfh5k9wmqaz',
+  database : 'dbv9pglvkpp9nq',
   port:'3306',
   multipleStatements: true ,
   connectionLimit: 10
-   
+
+  
 
   // // host   : '35.212.2.98',//
   // // siteground working with allowing remote access for 202.125.75.202 in siteground website
