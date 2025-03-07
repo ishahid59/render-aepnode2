@@ -5,13 +5,13 @@ const mysql = require('mysql');
 //createPool is used to avoid 505 err in render.com and also make app faster
  const mysqlConnection = mysql.createPool({//.createConnection({ //2024: new pool connection https://www.youtube.com/watch?v=eIjbSH3Imb8
 
-  // host     : 'localhost',
-  // user     : 'root',
-  // password : '',
-  // // database : 'node12',
-  // // database : 'aep',
-  // database : 'aep_blank_test',
-  // multipleStatements: true
+  host     : 'localhost',
+  user     : 'root',
+  password : '',
+  // database : 'node12',
+  // database : 'aep',
+  database : 'aep_blank_test',
+  multipleStatements: true
 
  
 
@@ -64,19 +64,19 @@ const mysql = require('mysql');
 
 
   
-  // Siteground compulink account for aep_blank_data
-  // // host   : '35.212.2.98',//
-  // siteground working with allowing remote access for 202.125.75.202 in siteground website
-  // host     :'35.212.2.98',//'gvam1290.siteground.biz',
+  // // Siteground compulink account for aep_blank_data
+  // // // host   : '35.212.2.98',//
+  // // siteground working with allowing remote access for 202.125.75.202 in siteground website
+  // // host     :'35.212.2.98',//'gvam1290.siteground.biz',
+  // // host: '35.212.92.202',//'gvam1261.siteground.biz',
   // host: '35.212.92.202',//'gvam1261.siteground.biz',
-  host: '35.212.92.202',//'gvam1261.siteground.biz',
-  user     : 'u83v3o6dxmnkh',
-  password : '$^##22#c)d5i',
-  // database : 'dbqpujqwr6gsfc',
-  database : 'dbv9pglvkpp9nq',
-  port:'3306',
-  multipleStatements: true ,
-  connectionLimit: 10
+  // user     : 'u83v3o6dxmnkh',
+  // password : '$^##22#c)d5i',
+  // // database : 'dbqpujqwr6gsfc',
+  // database : 'dbv9pglvkpp9nq',
+  // port:'3306',
+  // multipleStatements: true ,
+  // connectionLimit: 10
 
   
 
