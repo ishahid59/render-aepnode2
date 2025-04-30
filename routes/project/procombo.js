@@ -35,7 +35,17 @@ Router.get('/cmbprojecttype',  (req, res) => {
 })
 
 
-
+// for projecttype for ngselect multi
+Router.get('/cmbprojecttypemulti',  (req, res) => {
+    let sql = "SELECT * FROM list_projecttype WHERE list_projecttype.ListID>0 ORDER BY list_projecttype.ListID";
+   mysqlConnection.query(sql, (err, rows, fields) => {
+       if (!err) {
+           res.json(rows);
+       } else {
+           console.log(err);
+       }
+   });
+})
 
 
 
@@ -178,7 +188,10 @@ Router.get('/cmbproprofilecodesf254',  (req, res) => {
 
 
 Router.get('/cmbprodesitem',  (req, res) => {
-    let sql = "SELECT * FROM list_prodesitem WHERE list_prodesitem.ListID>-1 ORDER BY list_prodesitem.ListID";
+    // let sql = "SELECT * FROM list_prodesitem WHERE list_prodesitem.ListID>-1 ORDER BY list_prodesitem.ListID";
+    // 2025 after ngselect
+    let sql = "SELECT * FROM list_prodesitem WHERE list_prodesitem.ListID>0 ORDER BY list_prodesitem.ListID";
+
    mysqlConnection.query(sql, (err, rows, fields) => {
        if (!err) {
            res.json(rows);

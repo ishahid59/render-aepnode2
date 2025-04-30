@@ -16,6 +16,8 @@ const empmembership= require('./routes/employee/empmembership');
 const empexpsummary= require('./routes/employee/empexpsummary');
 const empdisciplinesf330= require('./routes/employee/empdisciplinesf330');
 const empprevemployment= require('./routes/employee/empprevemployment');
+const empresumetext= require('./routes/employee/empresumetext');
+
 
 const project= require('./routes/project/project');
 const procombo= require('./routes/project/procombo');
@@ -23,6 +25,8 @@ const proteam= require('./routes/project/proteam');
 const proaddress= require('./routes/project/proaddress');
 const proownercontact= require('./routes/project/proownercontact');
 const proclientcontact= require('./routes/project/proclientcontact');
+const propdstext= require('./routes/project/propdstext');
+
 
 const prodac= require('./routes/project/prodac');
 const prodescription= require('./routes/project/prodescription');
@@ -70,6 +74,8 @@ app.use('/api/empmembership',empmembership);
 app.use('/api/empexpsummary',empexpsummary);
 app.use('/api/empdisciplinesf330',empdisciplinesf330);
 app.use('/api/empprevemployment',empprevemployment);
+app.use('/api/empresumetext',empresumetext);
+
 
 app.use('/api/empdegree', empdegree);
 app.use('/api/empprojects', empprojects);
@@ -85,6 +91,7 @@ app.use('/api/proprofilecode', proprofilecode);
 app.use('/api/proaddress', proaddress);
 app.use('/api/proownercontact', proownercontact);
 app.use('/api/proclientcontact', proclientcontact);
+app.use('/api/propdstext', propdstext);
 
 //cao
 app.use('/api/cao', cao);

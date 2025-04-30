@@ -65,7 +65,7 @@ const mysql = require('mysql');
 
   
   // Siteground compulink account for aep_blank_data
-  // // host   : '35.212.2.98', //
+  // // host   : '35.212.2.98',//
   // siteground working with allowing remote access for 202.125.75.202 in siteground website
   // host     :'35.212.2.98',//'gvam1290.siteground.biz',
   // host: '35.212.92.202',//'gvam1261.siteground.biz',

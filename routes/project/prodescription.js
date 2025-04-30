@@ -304,6 +304,7 @@ Router.get('/prodescriptiondetails/:id', async (req, res) => {
             }
     
             let post3 = req.body;
+            console.log("TEST4"+req.body)
     
             let query = `UPDATE pro_descriptions  SET ? WHERE ID=?`;
             mysqlConnection.query(query, [post3, req.body.id], (err, rows, fields) => {

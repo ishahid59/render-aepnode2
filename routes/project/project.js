@@ -14,7 +14,11 @@ const utils = require('../utils');
 // Router.get('/all',authenticateToken,  function (req, res) {// with local auth
 Router.get('/all',  function (req, res) {
   // let sql="SELECT pro_main.ProjectID, pro_main.ProjectName from pro_main WHERE pro_main.ProjectID>0 order by pro_main.ProjectID"
-  let sql= "SELECT ProjectID,ProjectNo,ProjectName FROM pro_main WHERE pro_main.ProjectID>-1 ORDER BY pro_main.ProjectNo"
+//   let sql= "SELECT ProjectID,ProjectNo,ProjectName FROM pro_main WHERE pro_main.ProjectID>-1 ORDER BY pro_main.ProjectNo"
+  //2025
+// let sql= "SELECT ProjectID,ProjectNo,ProjectName FROM pro_main WHERE pro_main.ProjectID>0 ORDER BY pro_main.ProjectNo"
+let sql= "select CONCAT(pro_main.ProjectNo,' : ', pro_main.ProjectName) AS ProjectName, pro_main.ProjectID FROM  pro_main  where pro_main.ProjectID>0 order by ProjectNo"
+
 
     mysqlConnection.query(sql, (err, rows, fields) => {
         if (!err) {
@@ -1344,6 +1348,8 @@ Router.post('/search/angular-datatable', async function (req, res) {
         14: 'ProjectStatus',
         15: 'ProposalID',
         16: 'Action',
+
+
 
 
         // 0: 'chk',

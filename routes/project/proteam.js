@@ -326,7 +326,7 @@ Router.get('/proteamdetails/:id', async (req, res) => {
             emp_main ON pro_team.EmpID = emp_main.EmpID INNER JOIN \
             list_empprojectrole ON pro_team.EmpProjectRole = list_empprojectrole.ListID INNER JOIN \
             list_empprojectrole AS list_empprojectrole_1 ON pro_team.SecProjectRole = list_empprojectrole_1.ListID \
-            WHERE (pro_team.ProjectID = `+ req.body.projectid + `)`
+            WHERE (pro_team.ProjectID = `+ 1 + `)`
 
 
         if (search == "") {

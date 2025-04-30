@@ -286,6 +286,8 @@ Router.delete('/:empexpsummaryid', function (req, res) {
 
 
 
+
+
         if (search == "") {
             // console.log("No Search");
             sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
