@@ -56,7 +56,7 @@ Router.get('/lastprojectno', function (req, res) {
         if (err) {
             console.log(err)
         }
-        console.log(result);
+        // console.log("LASTPROJECTNO"+result);
         res.send(result);
         // res.send(result[0].empid);
     });
@@ -64,6 +64,28 @@ Router.get('/lastprojectno', function (req, res) {
 
 
 
+// // Used To check for duplicateemployeeid()
+// Router.get('/duplicateprojectno/:projectno', function (req, res) {
+//     // console.log("from maxempid"); 
+//     // mysqlConnection.query("SELECT MAX(EmpID) as empid FROM  emp_main", (err, result) => {
+//     // mysqlConnection.query("SELECT *  FROM  emp_main", (err, result) => {
+//     // mysqlConnection.query("SELECT * FROM emp_main WHERE emp_main.EmployeeID=?", req.param('empid'), (err, rows) => {
+//         // SELECT(SELECT COUNT(*)FROM Emp_Main) AS Total
+//         mysqlConnection.query("SELECT COUNT(*) AS projectnocount FROM pro_main  WHERE pro_main.ProjectNo=?", req.param('projectno'), (err, rows) => {
+   
+//         if (err) {
+//             console.log(err)
+//         }
+//         res.send(rows);//note: cannot get result[0].employeeidcount here. But can get value in angular from 'rows'
+//         // res.send(result[0].empid);
+//         // console.log("from maxempid"); 
+//     });
+
+// });
+
+
+
+// 2025 now checking all characters after 5 digits of  project no now since year may be different 
 // Used To check for duplicateemployeeid()
 Router.get('/duplicateprojectno/:projectno', function (req, res) {
     // console.log("from maxempid"); 
@@ -71,14 +93,18 @@ Router.get('/duplicateprojectno/:projectno', function (req, res) {
     // mysqlConnection.query("SELECT *  FROM  emp_main", (err, result) => {
     // mysqlConnection.query("SELECT * FROM emp_main WHERE emp_main.EmployeeID=?", req.param('empid'), (err, rows) => {
         // SELECT(SELECT COUNT(*)FROM Emp_Main) AS Total
-        mysqlConnection.query("SELECT COUNT(*) AS projectnocount FROM pro_main  WHERE pro_main.ProjectNo=?", req.param('projectno'), (err, rows) => {
-   
-        if (err) {
+        // mysqlConnection.query("SELECT COUNT(*) AS projectnocount FROM pro_main  WHERE pro_main.ProjectNo=?", req.param('projectno'), (err, rows) => {
+        // mysqlConnection.query("SELECT COUNT(*) AS projectnocount FROM pro_main WHERE CAST(SUBSTRING(ProjectNo, 6) AS unsigned)=?", req.param('projectno'), (err, rows) => {
+            mysqlConnection.query("SELECT COUNT(*) AS projectnocount FROM pro_main WHERE SUBSTRING(ProjectNo, 6)=?", req.param('projectno'), (err, rows) => {
+
+       
+            if (err) {
             console.log(err)
         }
         res.send(rows);//note: cannot get result[0].employeeidcount here. But can get value in angular from 'rows'
         // res.send(result[0].empid);
         // console.log("from maxempid"); 
+        // console.log("COUNT"+ rows[0].projectnocount);
     });
 
 });

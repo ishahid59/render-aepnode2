@@ -9,8 +9,8 @@ const mysql = require('mysql');
   // user     : 'root',
   // password : '',
   // // database : 'node12',
-  // // database : 'aep',
-  // database : 'aep_blank_test',
+  // //database : 'aep',
+  //  database : 'aep_blank_test',
   // multipleStatements: true
 
  
