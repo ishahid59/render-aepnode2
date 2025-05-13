@@ -23,6 +23,20 @@ Router.get('/cmbemp',  function (req, res) {
 });
 
 
+// // Employee combo for resumeproject search
+// // Router.get('/all',authenticateToken,  function (req, res) {// with local auth
+// Router.get('/cmbemp_resumeproject_search',  function (req, res) {
+//     let sql="SELECT emp_main.EmpID, emp_main.EmployeeID from emp_main WHERE emp_main.EmpID>-1 order by emp_main.EmployeeID"
+//     mysqlConnection.query(sql, (err, rows, fields) => {
+//        if (!err) {
+//            res.json(rows);
+//        } else {
+//            console.log(err);
+//        }
+//    });
+// });
+
+
 // cmb jobtitle
 Router.get('/cmbempjobtitle',  (req, res) => {
     let sql = "SELECT list_empjobtitle.ListID, list_empjobtitle.Str1 FROM list_empjobtitle WHERE list_empjobtitle.ListID>-1 ORDER BY list_empjobtitle.ListID";

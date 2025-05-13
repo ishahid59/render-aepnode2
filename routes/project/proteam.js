@@ -429,7 +429,7 @@ Router.get('/proteamdetails/:id', async (req, res) => {
     
 // Router.post('/search/angular-datatable',authenticateToken, function (req, res) { // with local auth
 // Router.post('/empdegree-angular-datatable/:empid', function (req, res) {
-    Router.post('/proteam-angular-datatable2', async function (req, res) { // sending empid in body now
+    Router.post('/proteam-angular-datatable-newempprojects', async function (req, res) { // sending empid in body now
         
         // console.log(req.body);
         // return;
@@ -588,10 +588,296 @@ Router.get('/proteamdetails/:id', async (req, res) => {
 
         
     });
+
+
+
+
+
+
+//*******************************************************************************************************
+// empresumeprojectssearch 2025
+// **************************************************************************************************** */
+
+
+Router.post('/proteam-angular-datatable-empresumeprojectssearch', async function (req, res) {
+    
+    let draw = req.body.draw;
+    let limit = req.body.length;
+    let offset = req.body.start;
+    // let ordercol = req.body['order[0][column]'];
+    let ordercol = req.body.order[0].column;//changed 20221130 for angular
+    // let orderdir =  req.body['order[0][dir]'];
+    let orderdir = req.body.order[0].dir;//changed 20221130 for angular
+    let search = req.body.search.value;
+    // let search = req.body['search[value]'];
+
+
+    let empid = req.body.empid;
+    let projectid = req.body.projectid;
+    let employeeid = req.body.employeeid;
+    let dutiesandresponsibilities = req.body.dutiesandresponsibilities;
+    let empprojectrole = req.body.empprojectrole;
+    let secprojectrole = req.body.secprojectrole;
+    let durationfrom = req.body.durationfrom;
+    let durationto = req.body.durationto;
+    let monthsofexp = req.body.monthsofexp;
+    let notes = req.body.notes;
+
+
+
+    // to get the column name from index since dtable sends col index
+    //** This is needed for order by to work and exact field name should be used
+    var columns = {
+        0: 'disProjectNo',
+        1: 'disEmployeeID',  
+        2: 'DutiesAndResponsibilities',
+        3: 'EmpProjectRole',
+        4:'SecProjectRole', 
+        5:'DurationFrom',
+        6:'DurationTo',
+        7:'MonthsOfExp',
+        8:'Notes',
+     }
+
+
+
+    var totalData = 0;
+    // var totalbeforefilter = 0;
+    var totalFiltered = 0;
+    var col = columns[ordercol];// to get name of order col not index
+
+
+    var sqlWhere = '';
+    filterpresent=false;
+
+
+    if (empid > 0) {
+        // sql = sql + ` AND emp_main.JobTitle = ${jobtitle}`
+        sqlWhere = sqlWhere + ` AND pro_team.EmpID = ${empid}`
+        filterpresent = true;
+    }
+    if (projectid > 0) {
+        // sql = sql + ` AND emp_main.JobTitle = ${jobtitle}`
+        sqlWhere = sqlWhere + ` AND pro_team.ProjectID = ${projectid}`
+        filterpresent = true;
+    }
+    if (dutiesandresponsibilities != "") {
+        sqlWhere = sqlWhere + ` AND pro_team.DutiesAndResponsibilities LIKE '%${dutiesandresponsibilities}%' `;
+        filterpresent = true;
+    }
+    if (empprojectrole != "") {
+        sqlWhere = sqlWhere + ` AND list_empprojectrole.Str1 LIKE '%${empprojectrole}%' `;
+        filterpresent = true;
+    }
+    if (durationfrom != "") {
+        sqlWhere = sqlWhere + ` AND pro_team.DurationFrom LIKE '%${durationfrom}%' `;
+        filterpresent = true;
+    }
+    if (durationto != "") {
+        sqlWhere = sqlWhere + ` AND pro_team.DurationTo LIKE '%${durationto}%' `;
+        filterpresent = true;
+    }
+    if (monthsofexp != "") {
+        sqlWhere = sqlWhere + ` AND pro_team.MonthsOfExp LIKE '%${monthsofexp}%' `;
+        filterpresent = true;
+    }
+    if (notes != "") {
+        sqlWhere = sqlWhere + ` AND pro_team.Notes LIKE '%${notes}%' `;
+        filterpresent = true;
+    }
+
     
 
 
 
+    // 2024 Avoid using multiple sql for speed
+    // https://stackoverflow.com/questions/33889922/how-to-get-the-number-of-total-results-when-there-is-limit-in-query
+    
+let from = 
+
+// old from empresumetext ` FROM emp_main LEFT OUTER JOIN emp_resumetext ON emp_main.EmpID = emp_resumetext.EmpID WHERE emp_main.EmpID>0 `
+
+` FROM pro_team INNER JOIN \
+        emp_main ON pro_team.EmpID = emp_main.EmpID INNER JOIN \
+        pro_main ON pro_team.ProjectID = pro_main.ProjectID INNER JOIN \
+        list_empprojectrole ON pro_team.EmpProjectRole = list_empprojectrole.ListID INNER JOIN \
+        list_empprojectrole AS list_empprojectrole_1 ON pro_team.SecProjectRole = list_empprojectrole_1.ListID \
+        WHERE pro_team.EmpID >0 ` 
+
+
+    // (select count(*) from emp_main WHERE emp_main.EmpID>0 ${sqlWhere}) as totalfiltered 
+
+    // https://stackoverflow.com/questions/33889922/how-to-get-the-number-of-total-results-when-there-is-limit-in-query
+    // https://stackoverflow.com/questions/15710930/mysql-select-distinct-count
+   
+    let sql =
+  
+    // old from empresumetext
+    // `SELECT DISTINCT emp_main.EmpID, emp_main.EmployeeID, emp_resumetext.Education,emp_resumetext.Registration, 
+    // emp_resumetext.Affiliations, emp_resumetext.Employment, emp_resumetext.Experience, 
+    // (select count(*) from emp_main WHERE emp_main.EmpID>0) as totaldata, 
+    // (select count(DISTINCT emp_main.EmpID) ${from} ${sqlWhere}) as totalfiltered 
+    // FROM emp_main LEFT OUTER JOIN emp_resumetext ON emp_main.EmpID = emp_resumetext.EmpID WHERE emp_main.EmpID>0 `
+
+
+    // ** Note "DISTINCT" is removed from sql  "count(DISTINCT pro_team.EmpID)" since many projects for 1 emp may exists, else will show 1 record for totalfiltered
+    ` SELECT emp_main.EmployeeID AS disEmployeeID, pro_main.ProjectNo AS disProjectNo, list_empprojectrole.Str1 AS disEmpProjectRole, list_empprojectrole_1.Str1 AS disSecProjectRole, pro_team.ID, \
+    pro_team.DutiesAndResponsibilities, pro_team.DurationFrom, pro_team.DurationTo, pro_team.MonthsOfExp, pro_team.Notes, pro_team.ProjectID, \ 
+    pro_team.EmpProjectRole, pro_team.SecProjectRole, pro_team.EmpID, \
+    (select count(*) from pro_team WHERE pro_team.EmpID>0) as totaldata, 
+    (select count(pro_team.EmpID) ${from} ${sqlWhere}) as totalfiltered 
+    FROM pro_team INNER JOIN \
+    emp_main ON pro_team.EmpID = emp_main.EmpID INNER JOIN \
+    pro_main ON pro_team.ProjectID = pro_main.ProjectID INNER JOIN \
+    list_empprojectrole ON pro_team.EmpProjectRole = list_empprojectrole.ListID INNER JOIN \
+    list_empprojectrole AS list_empprojectrole_1 ON pro_team.SecProjectRole = list_empprojectrole_1.ListID \
+    WHERE pro_team.EmpID >0 `
+
+    // ` SELECT emp_main.EmployeeID AS disEmployeeID, pro_main.ProjectNo AS disProjectNo, list_empprojectrole.Str1 AS disEmpProjectRole, list_empprojectrole_1.Str1 AS disSecProjectRole, pro_team.ID, \
+    // pro_team.DutiesAndResponsibilities, pro_team.DurationFrom, pro_team.DurationTo, pro_team.MonthsOfExp, pro_team.Notes, pro_team.ProjectID, \ 
+    // pro_team.EmpProjectRole, pro_team.SecProjectRole, pro_team.EmpID \
+    // FROM pro_team INNER JOIN \
+    // emp_main ON pro_team.EmpID = emp_main.EmpID INNER JOIN \
+    // pro_main ON pro_team.ProjectID = pro_main.ProjectID INNER JOIN \
+    // list_empprojectrole ON pro_team.EmpProjectRole = list_empprojectrole.ListID INNER JOIN \
+    // list_empprojectrole AS list_empprojectrole_1 ON pro_team.SecProjectRole = list_empprojectrole_1.ListID \
+    // WHERE (pro_team.EmpID = 2) `
+
+  
+if (search == "") {
+    // sql = sql + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+
+    // 2024 edited for showing all records
+    if (limit == -1) {
+        sql = sql + sqlWhere + ` order by ${col} ${orderdir} `;
+    } else {
+        sql = sql + sqlWhere + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+    }
+
+    // console.log(sql)
+    // sql = sql + ` order by ${col} ${orderdir} `;
+    mysqlConnection.query(sql, (err, rows, fields) => {
+        if (!err) {
+
+            if (!filterpresent) {
+                //2023 important. if no filter is present totalFiltered remains totalData in table
+                // totalFiltered = totalData;
+                if (rows.length>0) {
+                    totalData = rows[0].totaldata;
+                }
+                totalFiltered = totalData;
+            }  
+            else {
+                if (rows.length>0) {
+                    totalData = rows[0].totaldata;
+                }
+                if (rows.length>0) {
+                    totalFiltered = rows[0].totalfiltered;
+                }
+            }
+            res.json({
+                "draw": draw,
+                "recordsTotal": totalData,
+                "recordsFiltered": totalFiltered,
+                "data": rows
+            });
+        }
+        else {
+            console.log(err);
+        }
+
+    });
+
+} else {
+
+    // sqlWhere = sqlWhere + ` AND disProjectID LIKE '%${search}%'`; 
+    // sqlWhere = sqlWhere + ` OR disEmployeeID LIKE '%${search}%'`; 
+    sqlWhere = sqlWhere + ` AND pro_team.ProjectID LIKE '%${search}%'`; 
+    sqlWhere = sqlWhere + ` OR pro_team.EmpID LIKE '%${search}%'`; 
+    
+    sqlWhere = sqlWhere + ` OR pro_team.DutiesAndResponsibilities LIKE '%${search}%'`;        
+    sqlWhere = sqlWhere + ` OR list_empprojectrole.Str1 LIKE '%${search}%'`;
+    sqlWhere = sqlWhere + ` OR list_empprojectrole_1.Str1 LIKE '%${search}%'`;
+    sqlWhere = sqlWhere + ` OR pro_team.DurationFrom LIKE '%${search}%'`;
+    sqlWhere = sqlWhere + ` OR pro_team.DurationTo LIKE '%${search}%'`;
+    sqlWhere = sqlWhere + ` OR pro_team.MonthsOfExp LIKE '%${search}%'`;
+    sqlWhere = sqlWhere + ` OR pro_team.Notes LIKE '%${search}%'`;
+
+    sql =
+    // `SELECT DISTINCT emp_main.EmpID, emp_main.EmployeeID, emp_main.Firstname, emp_main.Lastname, com_main.CompanyName AS ComID, 
+    //     list_empjobtitle.Str1 AS JobTitle, list_department.Str1 AS Department, list_empregistration.Str1 AS Registration, emp_main.HireDate, 
+    //     list_disciplinesf254.Str1 AS DisciplineSF254, list_disciplinesf330.Str2 AS DisciplineSF330, list_empstatus.Str1 AS EmployeeStatus, 
+    //     emp_main.ExpWithOtherFirm, 
+    //     (select count(*) from emp_main WHERE emp_main.EmpID>0) as totaldata, 
+    //     (select count(DISTINCT emp_main.EmpID) ${from} ${sqlWhere}) as totalfiltered 
+    //     FROM emp_main LEFT OUTER JOIN
+    //     list_empregistration ON emp_main.Registration = list_empregistration.ListID LEFT OUTER JOIN
+    //     list_disciplinesf254 ON emp_main.DisciplineSF254 = list_disciplinesf254.ListID LEFT OUTER JOIN
+    //     list_disciplinesf330 ON emp_main.DisciplineSF330 = list_disciplinesf330.ListID LEFT OUTER JOIN
+    //     list_empjobtitle ON emp_main.JobTitle = list_empjobtitle.ListID LEFT OUTER JOIN
+    //     list_department ON emp_main.Department = list_department.ListID LEFT OUTER JOIN
+    //     list_empstatus ON emp_main.EmployeeStatus = list_empstatus.ListID LEFT OUTER JOIN
+    //     list_empprefix ON emp_main.Prefix = list_empprefix.ListID LEFT OUTER JOIN
+    //     list_empsuffix ON emp_main.Suffix = list_empsuffix.ListID LEFT OUTER JOIN
+    //     com_main ON emp_main.ComID = com_main.ComID LEFT OUTER JOIN
+    //     emp_degree ON emp_main.EmpID = emp_degree.EmpID LEFT OUTER JOIN
+    //     emp_training ON emp_main.EmpID = emp_training.EmpID LEFT OUTER JOIN
+    //     pro_team ON emp_main.EmpID = pro_team.EmpID LEFT OUTER JOIN
+    //     pro_main ON pro_team.ProjectID = pro_main.ProjectID WHERE emp_main.EmpID>0`
+
+ 
+
+        // `SELECT DISTINCT emp_main.EmpID, emp_main.EmployeeID, emp_resumetext.Education,emp_resumetext.Registration, 
+        // emp_resumetext.Affiliations,emp_resumetext.Experience, emp_resumetext.Employment,
+        // (select count(*) from emp_main WHERE emp_main.EmpID>0) as totaldata, 
+        // (select count(DISTINCT emp_main.EmpID) ${from} ${sqlWhere}) as totalfiltered 
+        // FROM emp_main LEFT OUTER JOIN emp_resumetext ON emp_main.EmpID = emp_resumetext.EmpID WHERE emp_main.EmpID>0 `
+   
+   
+        // ** Note "DISTINCT" is removed from sql  "count(DISTINCT pro_team.EmpID)" since many projects for 1 emp may exists
+        ` SELECT emp_main.EmployeeID AS disEmployeeID, pro_main.ProjectNo AS disProjectNo, list_empprojectrole.Str1 AS disEmpProjectRole, list_empprojectrole_1.Str1 AS disSecProjectRole, pro_team.ID, \
+        pro_team.DutiesAndResponsibilities, pro_team.DurationFrom, pro_team.DurationTo, pro_team.MonthsOfExp, pro_team.Notes, pro_team.ProjectID, \ 
+        pro_team.EmpProjectRole, pro_team.SecProjectRole, pro_team.EmpID, \
+        (select count(*) from pro_team WHERE pro_team.EmpID>0) as totaldata, 
+        (select count(pro_team.EmpID) ${from} ${sqlWhere}) as totalfiltered 
+        FROM pro_team INNER JOIN \
+        emp_main ON pro_team.EmpID = emp_main.EmpID INNER JOIN \
+        pro_main ON pro_team.ProjectID = pro_main.ProjectID INNER JOIN \
+        list_empprojectrole ON pro_team.EmpProjectRole = list_empprojectrole.ListID INNER JOIN \
+        list_empprojectrole AS list_empprojectrole_1 ON pro_team.SecProjectRole = list_empprojectrole_1.ListID \
+        WHERE pro_team.EmpID >0 `
+ 
+        if (limit == -1) {
+            sql = sql + sqlWhere + ` order by ${col} ${orderdir} `;
+        } else {
+            sql = sql + sqlWhere + ` order by ${col} ${orderdir} limit ${limit} offset ${offset} `;
+            console.log("stringsearch : " + sql);
+        }
+
+
+    mysqlConnection.query(sql, (err, rows, fields) => {
+        if (!err) {
+            if (rows.length>0) {
+                totalData = rows[0].totaldata;
+            }
+            if (rows.length>0) {
+                totalFiltered = rows[0].totalfiltered;
+            }
+            res.json({
+                "draw": draw,
+                "recordsTotal": totalData,
+                "recordsFiltered": totalFiltered,
+                "data": rows
+            });
+        }
+        else {
+            console.log(err);
+        }
+
+    });
+
+} // end else
+});
 
 
 

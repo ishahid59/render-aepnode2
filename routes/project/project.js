@@ -677,9 +677,19 @@ Router.post('/angular-datatable', async function (req, res) {
 
         sqlWhere = sqlWhere + ` AND pro_main.ProjectNo LIKE '%${search}%'`;
         sqlWhere = sqlWhere + ` OR pro_main.ProjectName LIKE '%${search}%'`;
-        sqlWhere = sqlWhere + ` OR list_projecttype.Str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR list_proprole.Str1 LIKE '%${search}%'`;
         sqlWhere = sqlWhere + ` OR pro_main.AwardYear LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR emp_main.EmployeeID LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR list_proocategory.Str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR com_main.CompanyName LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR list_projecttype.Str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR pro_main.SecondaryProjectType LIKE '%${search}%'`;
         sqlWhere = sqlWhere + ` OR cao_main.Name LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR cao_main_1.Name LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR pro_main.ProjectAgreementNo LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR list_prostatus.Str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR pro_main.ProposalID LIKE '%${search}%'`;
+
 
 
         sql =
@@ -1766,11 +1776,21 @@ Router.post('/search/angular-datatable', async function (req, res) {
 
     } else {
 
+
         sqlWhere = sqlWhere + ` AND pro_main.ProjectNo LIKE '%${search}%'`;
         sqlWhere = sqlWhere + ` OR pro_main.ProjectName LIKE '%${search}%'`;
-        sqlWhere = sqlWhere + ` OR list_projecttype.Str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR list_proprole.Str1 LIKE '%${search}%'`;
         sqlWhere = sqlWhere + ` OR pro_main.AwardYear LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR emp_main.EmployeeID LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR list_proocategory.Str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR com_main.CompanyName LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR list_projecttype.Str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR pro_main.SecondaryProjectType LIKE '%${search}%'`;
         sqlWhere = sqlWhere + ` OR cao_main.Name LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR cao_main_1.Name LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR pro_main.ProjectAgreementNo LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR list_prostatus.Str1 LIKE '%${search}%'`;
+        sqlWhere = sqlWhere + ` OR pro_main.ProposalID LIKE '%${search}%'`;
 
         // await utils.totalbeforelimtandoff(sql).then(data => {totalbeforelimitandoffset = data;});
 
