@@ -280,6 +280,7 @@ Router.post('/search/angular-datatable', async function (req, res) {
 
     let projectid = req.body.projectid;
     let pdsprojectname = req.body.pdsprojectname;
+    let pdslongprojectname = req.body.pdslongprojectname;
     let pdsprojectlocation = req.body.pdsprojectlocation;
     let ownercontact = req.body.ownercontact;
     let clientcontact = req.body.clientcontact;
@@ -310,13 +311,14 @@ Router.post('/search/angular-datatable', async function (req, res) {
 
         0: 'ProjectID',
         1: 'PdsProjectName',
-        2: 'PdsProjectLocation',
-        3: 'OwnerContact',
-        4: 'ClientContact',
-        5: 'StartEndDates',
-        6: 'ContractAmount',
-        7: 'PdsProjectDescription',
-        8: 'Notes',
+        2: 'PdsLongProjectName',
+        3: 'PdsProjectLocation',
+        4: 'OwnerContact',
+        5: 'ClientContact',
+        6: 'StartEndDates',
+        7: 'ContractAmount',
+        8: 'PdsProjectDescription',
+        9: 'Notes',
 
     }
 
@@ -338,6 +340,10 @@ Router.post('/search/angular-datatable', async function (req, res) {
     }
     if (pdsprojectname != "") {
         sqlWhere = sqlWhere + ` AND pro_pdstext.PdsProjectName LIKE '%${pdsprojectname}%' `;
+        filterpresent = true;
+    }
+    if (pdslongprojectname != "") {
+        sqlWhere = sqlWhere + ` AND pro_pdstext.PdsLongProjectName LIKE '%${pdslongprojectname}%' `;
         filterpresent = true;
     }
     if (pdsprojectlocation != "") {
@@ -461,7 +467,7 @@ let from =
 
     // ${join} used to show/hide all emp rows using join controlled by checkbox in frontend
 
-    `SELECT DISTINCT pro_main.ProjectID, pro_main.ProjectNo, pro_pdstext.PdsProjectName,pro_pdstext.PdsProjectLocation,
+    `SELECT DISTINCT pro_main.ProjectID, pro_main.ProjectNo, pro_pdstext.PdsProjectName, pro_pdstext.PdsLongProjectName,pro_pdstext.PdsProjectLocation,
     pro_pdstext.PdsProjectDescription, pro_pdstext.OwnerContact,pro_pdstext.ClientContact, 
     pro_pdstext.StartEndDates, pro_pdstext.ContractAmount, pro_pdstext.Notes, 
     (select count(*) from pro_main WHERE pro_main.ProjectID>0) as totaldata, 
@@ -526,6 +532,7 @@ if (search == "") {
 
     sqlWhere = sqlWhere + ` AND pro_main.ProjectNo LIKE '%${search}%'`; 
     sqlWhere = sqlWhere + ` OR pro_pdstext.PdsProjectName LIKE '%${search}%'`;        
+    sqlWhere = sqlWhere + ` OR pro_pdstext.PdsLongProjectName LIKE '%${search}%'`;        
     sqlWhere = sqlWhere + ` OR pro_pdstext.PdsProjectLocation LIKE '%${search}%'`;
     sqlWhere = sqlWhere + ` OR pro_pdstext.OwnerContact LIKE '%${search}%'`;
     sqlWhere = sqlWhere + ` OR pro_pdstext.ClientContact LIKE '%${search}%'`;
@@ -573,7 +580,7 @@ if (search == "") {
     
         // ${join} used to show/hide all emp rows using join controlled by checkbox in frontend
 
-        `SELECT DISTINCT pro_main.ProjectID, pro_main.ProjectNo, pro_pdstext.PdsProjectName,pro_pdstext.PdsProjectLocation,
+        `SELECT DISTINCT pro_main.ProjectID, pro_main.ProjectNo, pro_pdstext.PdsProjectName, pro_pdstext.PdsLongProjectName, pro_pdstext.PdsProjectLocation,
         pro_pdstext.PdsProjectDescription, pro_pdstext.OwnerContact,pro_pdstext.ClientContact, 
         pro_pdstext.StartEndDates, pro_pdstext.ContractAmount, pro_pdstext.Notes, 
         (select count(*) from pro_main WHERE pro_main.ProjectID>0) as totaldata, 
